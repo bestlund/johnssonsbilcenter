@@ -1,22 +1,39 @@
 import type { Metadata } from "next";
 import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
-import NextleaseWidget from "@/app/components/NextleaseWidget";
-import { DEALER_UID } from "@/lib/nextlease";
+import BilarBrowse from "./BilarBrowse";
+import { hamtaAllaFordon } from "@/lib/nextlease";
+import { filterFranParams } from "@/lib/bilfilter";
 
 export const metadata: Metadata = {
-  title: "Våra objekt — Johnsson Bilcenter",
+  title: "Våra bilar — Johnsson Bilcenter",
   description:
-    "Hitta din nästa bil hos Johnsson Bilcenter i Helsingborg. Bläddra bland alla våra objekt.",
+    "Bläddra bland alla bilar i lager hos Johnsson Bilcenter i Helsingborg. Filtrera på biltyp, drivmedel och växellåda.",
 };
 
-export default function BilarPage() {
+/**
+ * Vår egen browse-sida. Servern hämtar hela lagret och förfiltrerar via
+ * URL-query (t.ex. /bilar?drivmedel=Diesel från heron). Detaljvy + köp sker på
+ * /objekt (Nextlease-widgeten), dit korten länkar.
+ */
+export default async function BilarPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const { fordon, totalt } = await hamtaAllaFordon();
+  const start = filterFranParams(await searchParams);
+
   return (
     <>
       <SiteHeader />
       <main className="flex-1">
         <section className="shell py-10 lg:py-14">
-          <NextleaseWidget uid={DEALER_UID} />
+          <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
+            <h1>Våra bilar</h1>
+            <p className="text-mist">{totalt} bilar i lager</p>
+          </div>
+          <BilarBrowse bilar={fordon} start={start} />
         </section>
       </main>
       <SiteFooter />

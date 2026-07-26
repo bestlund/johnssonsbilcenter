@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { hamtaFordon } from "@/lib/nextlease";
+import { hamtaGoogleOmdomen } from "@/lib/googleReviews";
+import GoogleOmdomeBadge from "@/app/components/GoogleOmdomeBadge";
 import { byggVal, RUBRIK, BRODTEXT, Pil } from "./heroVal";
 
 const HERO_BILD = "/bilder/simon-start.webp";
@@ -12,6 +14,7 @@ const HERO_BILD = "/bilder/simon-start.webp";
  */
 export default async function HeroB() {
   const { totalt } = await hamtaFordon(1);
+  const omdomen = await hamtaGoogleOmdomen();
   const val = byggVal(totalt);
 
   return (
@@ -20,6 +23,7 @@ export default async function HeroB() {
         <div>
           <h1 className="text-[clamp(2.5rem,6vw,4rem)]">{RUBRIK}</h1>
           <p className="body-lg mt-8 max-w-lg text-mist">{BRODTEXT}</p>
+          <GoogleOmdomeBadge data={omdomen} />
         </div>
 
         {/* Porträtt — högre yta eftersom bilden är stående */}

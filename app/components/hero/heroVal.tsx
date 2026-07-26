@@ -1,6 +1,26 @@
-import { formatTal } from "@/lib/nextlease";
+import { formatTal, type Fordon } from "@/lib/nextlease";
 
 /** Delas av alla hero-varianter så innehållet inte divergerar. */
+
+/** Minimalt sök-index som skickas till klient-typeaheaden (HeroSok). */
+export type SokBil = {
+  uid: string;
+  brand: string;
+  model: string;
+  modelDescription: string;
+  modelYear: number;
+  price: number;
+};
+
+export const tillSokBilar = (fordon: Fordon[]): SokBil[] =>
+  fordon.map((b) => ({
+    uid: b.uid,
+    brand: b.brand,
+    model: b.model,
+    modelDescription: b.modelDescription,
+    modelYear: b.modelYear,
+    price: b.price,
+  }));
 
 export const BilIkon = (
   <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.6" className="h-5 w-5">
@@ -71,13 +91,10 @@ export const byggVal = (totalt: number): HeroVal[] => [
     href: "/salj-din-bil",
     ikon: PrislappIkon,
   },
-  {
-    titel: "Boka tid",
-    text: "Boka visning eller provkörning",
-    href: "/boka-mote",
-    ikon: KlockIkon,
-  },
 ];
+// Boka tid borttaget ur heron (bokning sker naturligt i köp-/säljflödet — lägg
+// ett "boka möte"-förslag längre in i flödet i stället). KlockIkon behålls för
+// återanvändning där. Se STATE.md/öppna punkter.
 
 export const RUBRIK = (
   <>

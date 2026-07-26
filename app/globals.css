@@ -465,6 +465,20 @@ h4 {
   background-color: var(--color-cobalt-500) !important;
 }
 
+/* Roterande citat (GoogleOmdomeBadge) — mjuk fade vid byte.
+   Den globala reduced-motion-regeln nedan stänger av den automatiskt. */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade {
+  animation: fade-in 400ms ease;
+}
+
 /* §8 Tillgänglighet — synlig fokusring på allt interaktivt */
 a:focus-visible,
 button:focus-visible,
@@ -473,6 +487,14 @@ textarea:focus-visible,
 summary:focus-visible {
   outline: 2px solid var(--color-cobalt-400);
   outline-offset: 2px;
+}
+
+/* Generell "ingen fokus-ring"-hook (hero-sök, formulärfält, flik-knappar). Fokus
+   visas i stället via border-highlight / aktiv-underline. Måste vara olagrad (som
+   regeln ovan) — en Tailwind-utility ligger i ett cascade layer och kan inte
+   slå den olagrade input:focus-visible-regeln oavsett specificitet. */
+.hero-sok-input:focus-visible {
+  outline: none;
 }
 
 /* §8 Respektera reducerad rörelse */

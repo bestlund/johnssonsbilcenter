@@ -8,12 +8,38 @@ const NAV = [
   { label: "Kontakta oss", href: "/kontakt" },
 ];
 
-/** §7.9 Navigation. Telefon + snabblänkar Köp/Sälj ligger högst upp (Jakobs lag). */
+function TelefonIkon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      strokeWidth="1.7"
+      className={className}
+      aria-hidden="true"
+    >
+      <path
+        d="M6.6 3.5c.4 0 .8.3.9.7l1 3a1 1 0 0 1-.25 1L8 9.4a12 12 0 0 0 4.6 4.6l1.2-1.25a1 1 0 0 1 1-.25l3 1c.4.13.7.5.7.9v3a1.5 1.5 0 0 1-1.6 1.5C8.9 18.9 5.1 15.1 4.6 5.1A1.5 1.5 0 0 1 6.1 3.5h.5Z"
+        stroke="currentColor"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+/**
+ * §7.9 Navigation. Ligger i .shell (samma bredd/padding som alla andra sektioner)
+ * så logo och telefon linjerar med sidans innehåll. Grid 1fr/auto/1fr gör att
+ * menyn hamnar exakt centrerad. Ingen bakgrund/border/radie och inte sticky.
+ */
 export default function SiteHeader() {
   return (
-    <header className="sticky top-4 z-40 px-4 lg:px-8">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between gap-6 rounded-lg border border-line bg-card/90 px-5 py-3 backdrop-blur-md">
-        <Link href="/" className="shrink-0" aria-label="Johnsson Bilcenter AB — till startsidan">
+    <header className="py-5">
+      <div className="shell grid grid-cols-[1fr_auto_1fr] items-center gap-8">
+        <Link
+          href="/"
+          className="justify-self-start"
+          aria-label="Johnsson Bilcenter AB — till startsidan"
+        >
           <Image
             src="/bilder/logo-johnsson-bilcenter-vit.webp"
             alt="Johnsson Bilcenter AB"
@@ -24,7 +50,7 @@ export default function SiteHeader() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-6 lg:flex">
+        <nav className="hidden items-center gap-8 justify-self-center lg:flex">
           {NAV.map((item) => (
             <Link
               key={item.href}
@@ -36,21 +62,13 @@ export default function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2">
-          {/* Telefon synlig direkt, inte bara i footern */}
-          <a
-            href="tel:+46733029019"
-            className="btn btn-secondary data hidden sm:inline-flex"
-          >
-            073-302 90 19
-          </a>
-          <Link href="/salj-din-bil" className="btn btn-secondary">
-            Sälj bil
-          </Link>
-          <Link href="/bilar" className="btn btn-primary">
-            Köp bil
-          </Link>
-        </div>
+        <a
+          href="tel:+46733029019"
+          className="hidden items-center gap-2 justify-self-end text-sm font-medium text-mist transition-colors hover:text-linen sm:flex"
+        >
+          <TelefonIkon className="h-4 w-4 text-cobalt-400" />
+          073-302 90 19
+        </a>
       </div>
     </header>
   );

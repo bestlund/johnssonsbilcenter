@@ -1,45 +1,80 @@
-// Länk till företagets Google-omdömen (från användaren). Betyg/antal är
-// STATISKA (manuellt underhållna) — uppdatera dessa två konstanter vid behov.
-const GOOGLE_REVIEWS =
-  "https://www.google.com/search?q=Johnsson+Bilcenter+AB&si=APenkKm7iecQ4G6P-TsbSMFKIQtv3EFIqRAFw-i8uEbk55Z-_11SUEp8b3UmJ2sLe5p3rRKlVGo433jCuR7mzMgyS5ZKWbxCTw2Wtey4q63o4c9tyFxXfL0%3D";
-const BETYG = "4,9";
-const ANTAL = 61;
+import { hamtaGoogleOmdomen } from "@/lib/googleReviews";
 
-// Äkta kundomdömen från deras Google (content.md, Bilaga A).
-const UTVALT = {
+/**
+ * Omdömessektionen — LIVE från Google (Places API via lib/googleReviews).
+ * Google ger max 5 recensioner → 1 utvalt (mörka kortet) + upp till 4 i rutnätet.
+ * Aggregatet (betyg/antal) är komplett och live. Faller tillbaka på de kända
+ * hårdkodade omdömena nedan om API:et inte svarar, så sektionen alltid renderar.
+ */
+
+// Reservomdömen (content.md, Bilaga A) — visas bara om live-hämtningen ger 0.
+const RESERV_UTVALT = {
   namn: "Håkan Lindbergh",
   kontext: "Köpte Toyota Yaris · Google",
   text: "Forden strejkade i kylan, ringde Simon och några timmar senare satt vi i en varm Yaris — efter en enkelt genomförd affär som vi känner oss trygga med. Forden blev inbytet. Tack Simon!",
+  betyg: 5,
 };
 
-const OVRIGA = [
+const RESERV_OVRIGA = [
   {
     namn: "Ali Mohammed",
+    kontext: "Google",
+    betyg: 5,
     text: "Aldrig varit med om något smidigare i mitt liv! Jätte trevlig kille. Hade rekommenderat att antagligen köpa en bil eller sälja sin egen bil till Johnsson Bilcenter AB om ni vill ha en lycklig affär!",
   },
   {
     namn: "Michael Andersson",
+    kontext: "Google",
+    betyg: 5,
     text: "Köpte inte för eget bruk utan hjälpte min far till ett nytt bilköp. Allt som berättades om bilen innan köp stämde perfekt. Väldigt ödmjuk och behjälplig säljare genom hela affären.",
   },
   {
     namn: "Mathilde Sörensen",
+    kontext: "Google",
+    betyg: 5,
     text: "Trygg och smidig bilaffär där Simon även tog vår gamla bil i inbyte. Personligt och ärligt bemötande. Vi är mycket nöjda och rekommenderar varmt Johnssons Bilcenter.",
   },
   {
     namn: "Annika Sundström",
+    kontext: "Google",
+    betyg: 5,
     text: "Jag är nöjd med mitt bilköp. Simon svarade snabbt och tydligt på all kommunikation och bemötandet har varit gott under hela processen.",
   },
 ];
 
-function Stjarnor({ className = "" }: { className?: string }) {
+type Omdome = {
+  namn: string;
+  kontext: string;
+  betyg: number;
+  text: string;
+};
+
+function korta(text: string, max: number) {
+  if (text.length <= max) return text;
+  return text.slice(0, max).replace(/\s+\S*$/, "") + "…";
+}
+
+function Stjarnor({
+  betyg = 5,
+  className = "",
+}: {
+  betyg?: number;
+  className?: string;
+}) {
+  const fyllda = Math.round(betyg);
   return (
     <div
-      className={`flex gap-0.5 text-amber ${className}`}
+      className={`flex gap-0.5 ${className}`}
       role="img"
-      aria-label="5 av 5 stjärnor"
+      aria-label={`${betyg.toLocaleString("sv-SE")} av 5 stjärnor`}
     >
       {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+        <svg
+          key={i}
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={`h-4 w-4 ${i < fyllda ? "text-amber" : "text-cream-line"}`}
+        >
           <path d="M10 1.6l2.5 5.1 5.6.8-4 4 1 5.6L10 14.5 4.9 17.1l1-5.6-4-4 5.6-.8L10 1.6z" />
         </svg>
       ))}
@@ -74,7 +109,24 @@ function Initialer({
   );
 }
 
-export default function Omdomen() {
+export default async function Omdomen() {
+  const data = await hamtaGoogleOmdomen();
+
+  // Mappa live-recensioner till kortformen; fall tillbaka på reservdata om tomt.
+  const live: Omdome[] = data.recensioner.map((r) => ({
+    namn: r.forfattare,
+    kontext: r.nar ? `${r.nar} · Google` : "Google",
+    betyg: r.betyg,
+    text: r.text,
+  }));
+
+  const utvalt: Omdome = live[0] ?? RESERV_UTVALT;
+  const ovriga: Omdome[] = live.length > 0 ? live.slice(1, 5) : RESERV_OVRIGA;
+
+  const betygText = data.betyg.toLocaleString("sv-SE", {
+    minimumFractionDigits: 1,
+  });
+
   return (
     // Ljus sektion — temaundantaget. Full-bredds cream-yta, innehåll i .shell.
     // .frame ritar cobalt-hörnramen (blueprint-accenten).
@@ -83,20 +135,20 @@ export default function Omdomen() {
         <div className="flex flex-wrap items-end justify-between gap-6">
           <h2>Riktiga affärer, riktiga ord</h2>
 
-          {/* Betygsbadge — riktiga siffror, länkar till Google */}
+          {/* Betygsbadge — live siffror, länkar till Google */}
           <a
-            href={GOOGLE_REVIEWS}
+            href={data.lank}
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-3 transition-opacity hover:opacity-80"
           >
             <span className="font-display text-3xl font-extrabold leading-none">
-              {BETYG}
+              {betygText}
             </span>
             <span>
-              <Stjarnor />
+              <Stjarnor betyg={data.betyg} />
               <span className="mt-1 block text-xs text-ink-soft">
-                {ANTAL} omdömen · Google
+                {data.antal} omdömen · Google
               </span>
             </span>
           </a>
@@ -109,29 +161,31 @@ export default function Omdomen() {
               <span className="font-display text-4xl leading-none text-cobalt-400">
                 &rdquo;
               </span>
-              <blockquote className="body-lg mt-4">{UTVALT.text}</blockquote>
+              <blockquote className="body-lg mt-4">
+                {korta(utvalt.text, 320)}
+              </blockquote>
             </div>
             <figcaption className="mt-10 flex items-center gap-3">
-              <Initialer namn={UTVALT.namn} variant="dark" />
+              <Initialer namn={utvalt.namn} variant="dark" />
               <span>
                 <span className="block text-sm font-semibold">
-                  {UTVALT.namn}
+                  {utvalt.namn}
                 </span>
-                <span className="block text-xs text-fog">{UTVALT.kontext}</span>
+                <span className="block text-xs text-fog">{utvalt.kontext}</span>
               </span>
             </figcaption>
           </figure>
 
-          {/* Rutnät 2×2 */}
+          {/* Rutnät — upp till 4 övriga */}
           <div className="grid gap-4 sm:grid-cols-2">
-            {OVRIGA.map((o) => (
+            {ovriga.map((o) => (
               <figure
                 key={o.namn}
                 className="flex flex-col rounded-lg border border-cream-line bg-cream-card p-5"
               >
-                <Stjarnor />
+                <Stjarnor betyg={o.betyg} />
                 <blockquote className="mt-3 flex-1 text-[13px] leading-relaxed text-ink-soft">
-                  {o.text}
+                  {korta(o.text, 170)}
                 </blockquote>
                 <figcaption className="mt-4 flex items-center gap-3">
                   <Initialer namn={o.namn} />
@@ -139,7 +193,9 @@ export default function Omdomen() {
                     <span className="block text-[13px] font-semibold">
                       {o.namn}
                     </span>
-                    <span className="block text-xs text-ink-muted">Google</span>
+                    <span className="block text-xs text-ink-muted">
+                      {o.kontext}
+                    </span>
                   </span>
                 </figcaption>
               </figure>
@@ -148,7 +204,7 @@ export default function Omdomen() {
         </div>
 
         <a
-          href={GOOGLE_REVIEWS}
+          href={data.lank}
           target="_blank"
           rel="noopener noreferrer"
           className="btn btn-secondary mt-8"

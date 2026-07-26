@@ -69,6 +69,11 @@ export async function hamtaFordon(antal = 4): Promise<HamtResultat> {
   return { fordon: fordon.slice(0, antal), totalt };
 }
 
+/** Hela lagret — för hero-typeahead som filtrerar på klientsidan. */
+export async function hamtaAllaFordon(): Promise<HamtResultat> {
+  return hamtaAlla();
+}
+
 /**
  * `antal` slumpvis valda fordon ur hela lagret. Blandas per anrop — på en
  * dynamiskt renderad sida blir det nya bilar vid varje besök, och sålda/
