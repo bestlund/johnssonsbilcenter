@@ -27,26 +27,6 @@ const TJANSTER = [
   },
 ];
 
-/** Snabbfakta — ersätter den tidigare numrerade fördelar-sektionen. */
-const FAKTA = [
-  {
-    titel: "Varudeklaration",
-    text: "Följer med vid varje affär och visar bilens skick.",
-  },
-  {
-    titel: "Inbyte",
-    text: "Lämna din gamla bil som del av betalningen.",
-  },
-  {
-    titel: "Kostnadsfri värdering",
-    text: "Vi värderar din bil utan att det kostar dig något.",
-  },
-  {
-    titel: "Hemleverans",
-    text: "Vi kan leverera bilen hem till dig.",
-  },
-];
-
 export default function Tjanster() {
   return (
     <section className="shell py-14 lg:py-20">
@@ -72,16 +52,6 @@ export default function Tjanster() {
               </Link>
             </div>
           </article>
-        ))}
-      </div>
-
-      {/* Snabbfakta */}
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {FAKTA.map((f) => (
-          <div key={f.titel} className="card p-5">
-            <h4 className="text-base font-semibold">{f.titel}</h4>
-            <p className="small mt-1.5 text-mist">{f.text}</p>
-          </div>
         ))}
       </div>
     </section>
