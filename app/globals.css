@@ -1,26 +1,486 @@
 @import "tailwindcss";
 
+/**
+ * Johnsson Bilcenter — designsystem v1
+ * Implementerar design-system.md. Ändra tokens här, inte i komponenterna.
+ * Dark mode är enda temat.
+ */
+@theme {
+  /* §1 Ytor */
+  --color-page: #12141a; /* Midnight */
+  --color-card: #1a1d24; /* Coal */
+  --color-elevated: #242832; /* Iron */
+  --color-line: #333947; /* Ash */
+  --color-line-strong: #454c5c;
+
+  /* §1 Text */
+  --color-linen: #f2f0ea; /* varmvit, ej ren vit */
+  --color-mist: #a8aeba;
+  --color-fog: #6b7280;
+
+  /* §1 Primär — Cobalt */
+  --color-cobalt-400: #7ba3ff;
+  --color-cobalt-500: #4a85ff;
+  --color-cobalt-600: #2e63e0;
+  --color-cobalt-700: #1e48ad;
+
+  /* §1 Semantiska */
+  --color-success: #34c77b;
+  --color-warning: #f0b429;
+  --color-danger: #ef5a5a;
+  --color-amber: #fbbc04; /* stjärnbetyg — Googles guldgula */
+  --color-highlight: #8c94a2; /* gemensam hover-highlight (fog några shades ljusare) */
+
+  /* §1.1 Ljus yta — ENDA undantaget från dark-only. Varm palett som speglar den
+     mörka inverterat, så utvalda sektioner (t.ex. omdömen) kan gå ljusa utan att
+     skära sig mot linen-tonen. Se design-system.md §1.1. */
+  --color-cream: #faf9f6; /* varmvit sektionsyta */
+  --color-cream-card: #ffffff; /* kort på ljus yta */
+  --color-cream-line: #e6e3db; /* varm ljus kant */
+  --color-ink: #1c1f26; /* primär text på ljust */
+  --color-ink-soft: #5a616e; /* sekundär text på ljust */
+  --color-ink-muted: #8b909c; /* dämpad text på ljust */
+
+  /* §4 Radie */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* §2 Typsnitt */
+  --font-sans: var(--font-hanken);
+  --font-mono: var(--font-jetbrains);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --primary-tint: rgba(74, 133, 255, 0.12);
+  --success-tint: rgba(52, 199, 123, 0.12);
+  --warning-tint: rgba(240, 180, 41, 0.12);
+  --danger-tint: rgba(239, 90, 90, 0.12);
+  /* §5 Rörelse — ett enda värde, konsekvens > variation */
+  --transition-fast: 150ms ease;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-page);
+  color: var(--color-linen);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* §2 Skala — rubriker */
+h1 {
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+h2 {
+  font-size: clamp(1.625rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+h4 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+
+/* §2 Skala — text */
+.body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+.small {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+}
+.caption {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.data {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  line-height: 1.4;
+}
+
+/* §7.1 Knappar — radie md, padding 10/18, 14px/600 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  padding: 10px 18px;
+  transition: background-color var(--transition-fast),
+    border-color var(--transition-fast), color var(--transition-fast);
+  cursor: pointer;
+}
+.btn-primary {
+  background: var(--color-cobalt-500);
+  color: #0b0d11; /* mörk text på cobalt, inte tvärtom */
+}
+.btn-primary:hover {
+  background: var(--color-cobalt-400);
+}
+.btn-primary:active {
+  background: var(--color-cobalt-600);
+  color: var(--color-linen);
+}
+.btn-primary:disabled {
+  background: var(--color-elevated);
+  color: var(--color-fog);
+  cursor: not-allowed;
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--color-linen);
+  border: 1px solid var(--color-line-strong);
+}
+.btn-secondary:hover {
+  border-color: var(--color-highlight);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--color-cobalt-400);
+  padding-inline: 0;
+}
+
+/* §7.2 Formulärfält */
+.field-label {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-mist);
+  margin-bottom: 6px;
+}
+.field-input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--color-linen);
+  background: var(--color-card);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color var(--transition-fast),
+    box-shadow var(--transition-fast);
+}
+.field-input::placeholder {
+  color: var(--color-fog);
+}
+.field-input:focus {
+  border-color: var(--color-cobalt-500);
+  box-shadow: 0 0 0 3px var(--primary-tint);
+}
+.field-input[aria-invalid="true"] {
+  border-color: var(--color-danger);
+  box-shadow: 0 0 0 3px var(--danger-tint);
+}
+
+/* §7.3 Länkar */
+.link {
+  color: var(--color-cobalt-400);
+  transition: color var(--transition-fast);
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+/* §7.4 Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-sm);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+}
+.badge-primary {
+  background: var(--primary-tint);
+  color: var(--color-cobalt-400);
+}
+.badge-neutral {
+  background: var(--color-elevated);
+  color: var(--color-mist);
+}
+.badge-success {
+  background: var(--success-tint);
+  color: var(--color-success);
+}
+
+/* §7.8 Kort */
+.card {
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-lg);
+}
+
+/**
+ * §1.1 Ljus sektion — temaundantaget. Full-bredds ljus yta; lägg en .shell
+ * INUTI för innehållsbredd (bakgrunden ska gå kant-till-kant, innehållet inte).
+ * Sätter yta + standardtextfärg till ink; komponenter inuti använder
+ * ink-/cream-tokens (text-ink-soft, bg-cream-card, border-cream-line …).
+ * .amber-stjärnor och cobalt-accenter (cobalt-600 på ljust) behålls.
+ */
+.section-light {
+  /* background-COLOR (inte shorthand) så .frame:s background-image inte nollas */
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+/* Sekundärknappen inverterar automatiskt på ljus yta */
+.section-light .btn-secondary {
+  color: var(--color-ink);
+  border-color: var(--color-cream-line);
+}
+.section-light .btn-secondary:hover {
+  border-color: var(--color-ink-muted);
+}
+
+/**
+ * Hörn-ram — återanvändbar "blueprint"-accent. Fyra cobalt L-hörn ritade med
+ * rena background-gradienter (inga extra DOM-element), så .frame kan läggas på
+ * valfri sektion. Justera via variablerna nedan. Sätter bara background-image/
+ * -position/-size — background-color lämnas orörd (så .section-light m.fl. lever
+ * kvar under). Se design-system.md §1.2.
+ */
+.frame {
+  --frame-color: var(--color-cobalt-500);
+  --frame-arm: 28px; /* hörnarmarnas längd */
+  --frame-thick: 2px; /* linjetjocklek */
+  --frame-inset: 16px; /* avstånd in från kanten */
+  background-image: linear-gradient(var(--frame-color), var(--frame-color)),
+    linear-gradient(var(--frame-color), var(--frame-color)),
+    linear-gradient(var(--frame-color), var(--frame-color)),
+    linear-gradient(var(--frame-color), var(--frame-color)),
+    linear-gradient(var(--frame-color), var(--frame-color)),
+    linear-gradient(var(--frame-color), var(--frame-color)),
+    linear-gradient(var(--frame-color), var(--frame-color)),
+    linear-gradient(var(--frame-color), var(--frame-color));
+  background-repeat: no-repeat;
+  background-position:
+    /* uppe vänster: vågrät, lodrät */
+    var(--frame-inset) var(--frame-inset),
+    var(--frame-inset) var(--frame-inset),
+    /* uppe höger */ calc(100% - var(--frame-inset)) var(--frame-inset),
+    calc(100% - var(--frame-inset)) var(--frame-inset),
+    /* nere vänster */ var(--frame-inset) calc(100% - var(--frame-inset)),
+    var(--frame-inset) calc(100% - var(--frame-inset)),
+    /* nere höger */ calc(100% - var(--frame-inset)) calc(100% - var(--frame-inset)),
+    calc(100% - var(--frame-inset)) calc(100% - var(--frame-inset));
+  background-size:
+    var(--frame-arm) var(--frame-thick), var(--frame-thick) var(--frame-arm),
+    var(--frame-arm) var(--frame-thick), var(--frame-thick) var(--frame-arm),
+    var(--frame-arm) var(--frame-thick), var(--frame-thick) var(--frame-arm),
+    var(--frame-arm) var(--frame-thick), var(--frame-thick) var(--frame-arm);
+}
+
+/**
+ * Innehållsbredd — breddad till 1440px för att matcha skalan hos större
+ * bilsajter (Bilia, Riddermark m.fl.).
+ */
+.shell {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+@media (min-width: 1024px) {
+  .shell {
+    padding-inline: 2.5rem;
+  }
+}
+
+/**
+ * Valplatta — de tre jämbördiga hero-CTA:erna (Köpa/Sälja/Boka).
+ * Egen komponent, inte .btn, så att §7.1:s regel om max en primary-knapp
+ * per vy inte bryts av tre likvärdiga val.
+ */
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--color-card);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  font-weight: 600;
+  transition: border-color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+.tile:hover {
+  background: var(--color-elevated);
+  border-color: var(--color-cobalt-500);
+}
+
+/**
+ * Nextlease-widget — endast typsnitt.
+ *
+ * Widgeten monteras med .mount("#nextlease") i vanlig DOM (ingen shadow DOM),
+ * och exponerar `--nextlease_`-variabler. Den sätter sina egna värden inline på
+ * :root, men eftersom vi definierar dem på #nextlease — en ättling — vinner
+ * våra värden för allt inuti widgeten.
+ *
+ * FÄRGER, MÖRKT LÄGE OCH RADIE styrs numera i Nextlease admin (per publicerings-
+ * konfiguration/UID), så att Simon kan finjustera själv. Vi rör dem INTE här —
+ * annars skulle koden klottra över hans inställningar. Typsnitt är det enda
+ * panelen saknar, så det behåller vi som överskrivning.
+ */
+#nextlease {
+  --nextlease_font-primary: var(--font-sans);
+  --nextlease_font-primary-base: var(--font-sans);
+  --nextlease_font-secondary: var(--font-sans);
+}
+
+/**
+ * Nextlease-KORT — CSS-hack.
+ *
+ * Kortet är `<article class="nextlease-vehicle">` (verifierat mot renderad DOM),
+ * INTE PrimeVue. Det har semantiska BEM-klasser som är stabila hållpunkter:
+ *   .nextlease-vehicle              — kortet
+ *   .nextlease-vehicle__title       — rubrik
+ *   .nextlease-vehicle__model-description — brödtext
+ *   .nextlease-vehicle__features    — taggraden
+ *   .nextlease-vehicle__prices      — prisraden
+ * Bilden är kortets FÖRSTA barn-div; texten ligger i en klasslös andra
+ * barn-div helt utan padding i original.
+ *
+ * Risk: ändrar Nextlease sin markup kan detta sluta gälla tyst. Scope
+ * `#nextlease` finns bara på /bilar; våra egna bilkort ligger utanför.
+ */
+
+/* Fordonsbilden fyller kortets topp kant-till-kant (deras img är object-contain) */
+#nextlease .nextlease-vehicle img {
+  object-fit: cover !important;
+  border-radius: 0 !important;
+}
+
+/* Textinnehållet (kortets sista barn-div) saknar all padding i original.
+   Ge det sidopadding + luft upp mot bilden och ned mot kanten. Bilden är
+   första barnet och förblir full-bleed. */
+#nextlease .nextlease-vehicle > div:last-child {
+  padding: 0.25rem 0.75rem 0.25rem !important;
+}
+
+/* Luft mellan brödtext och taggraden */
+#nextlease .nextlease-vehicle__features {
+  margin-top: 0.875rem !important;
+}
+
+/* Hover — samma princip som framsidans kort: outline highlightas (starkare),
+   ingen bildzoom. Kortets border-color sätts inline, så !important krävs. */
+#nextlease .nextlease-vehicle {
+  transition: border-color 150ms ease;
+}
+#nextlease .nextlease-vehicle:hover {
+  border-color: var(--color-highlight) !important;
+}
+#nextlease .nextlease-vehicle img:hover {
+  transform: none !important;
+}
+
+/**
+ * Flytta intervallfiltren (Modellår/Pris/Miltal) till toppen, direkt under Sök.
+ * De hårdkodas sist av widgeten och går INTE att sortera i Nextlease admin, men
+ * filterkolumnen `.nextlease-filters` är en flex-kolumn så vi styr med `order`:
+ * Sök (-4) → Modellår (-3) → Pris (-2) → Miltal (-1) → resten (0).
+ * OBS: widgetens klass är felstavad "yaer-filter" (inte year).
+ */
+#nextlease .nextlease-filters > div:has(#nextleasesearch) {
+  order: -4;
+}
+#nextlease .nextlease-filters > .yaer-filter {
+  order: -3;
+}
+#nextlease .nextlease-filters > .price-filter {
+  order: -2;
+}
+#nextlease .nextlease-filters > .mileage-filter {
+  order: -1;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 1rem;
+}
+
+/**
+ * Formulärkontroller — PrimeVue-komponenter med hårdkodat LJUST tema som
+ * widgetens mörka läge inte rör (sökruta, dropdowns, checkboxar, paginering).
+ * Stabila .p-*-klasser. Färgstater (checked/aktiv/hover) kan behöva finjusteras
+ * i DevTools — säg till om någon ser fel ut.
+ */
+/* Sökruta + dropdowns (Sök, Från/Till, Sortera på) */
+#nextlease .p-inputtext,
+#nextlease .p-dropdown {
+  background: var(--color-card) !important;
+  border-color: var(--color-line) !important;
+  color: var(--color-linen) !important;
+}
+#nextlease .p-inputtext::placeholder {
+  color: var(--color-fog) !important;
+}
+/* Öppen dropdown-meny + dess alternativ */
+#nextlease .p-dropdown-panel {
+  background: var(--color-card) !important;
+  border: 1px solid var(--color-line) !important;
+}
+#nextlease .p-dropdown-item {
+  color: var(--color-linen) !important;
+}
+#nextlease .p-dropdown-item:hover {
+  background: var(--color-elevated) !important;
+}
+/* Checkboxar — omarkerad ruta mörk, markerad = cobalt */
+#nextlease .p-checkbox-box {
+  background: var(--color-card) !important;
+  border-color: var(--color-line-strong) !important;
+}
+#nextlease .p-checkbox-box.p-highlight {
+  background: var(--color-cobalt-500) !important;
+  border-color: var(--color-cobalt-500) !important;
+}
+/* Paginering — Element Plus (.el-pagination), INTE PrimeVue (widgeten blandar
+   bibliotek). Inaktiva sidor + pilar mörka; aktiv sida sätts till vår cobalt. */
+#nextlease .el-pagination.is-background .el-pager li:not(.is-active),
+#nextlease .el-pagination.is-background .btn-prev,
+#nextlease .el-pagination.is-background .btn-next {
+  background-color: var(--color-card) !important;
+  border: 1px solid var(--color-line) !important;
+  color: var(--color-linen) !important;
+}
+#nextlease .el-pagination.is-background .el-pager li.is-active {
+  background-color: var(--color-cobalt-500) !important;
+}
+
+/* §8 Tillgänglighet — synlig fokusring på allt interaktivt */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-cobalt-400);
+  outline-offset: 2px;
+}
+
+/* §8 Respektera reducerad rörelse */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
 }

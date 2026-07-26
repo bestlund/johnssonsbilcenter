@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<title>Johnsson Bilcenter — Grafiskt system v0.1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Ytor */
+    --surface-page: #12141A;
+    --surface-card: #1A1D24;
+    --surface-elevated: #242832;
+    --border: #333947;
+    --border-strong: #454C5C;
+
+    /* Text */
+    --text-primary: #F2F0EA;
+    --text-secondary: #A8AEBA;
+    --text-muted: #6B7280;
+
+    /* Primary — Cobalt */
+    --primary-400: #7BA3FF;
+    --primary-500: #4A85FF;
+    --primary-600: #2E63E0;
+    --primary-700: #1E48AD;
+    --primary-tint: rgba(74,133,255,0.12);
+
+    /* Semantiska */
+    --success: #34C77B;
+    --warning: #F0B429;
+    --danger: #EF5A5A;
+    --success-tint: rgba(52,199,123,0.12);
+    --danger-tint: rgba(239,90,90,0.12);
+
+    /* Radie */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    /* Spacing */
+    --sp-1: 4px; --sp-2: 8px; --sp-3: 12px; --sp-4: 16px;
+    --sp-6: 24px; --sp-8: 32px; --sp-12: 48px; --sp-16: 64px;
+
+    --font-ui: 'Hanken Grotesk', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--font-ui);
+    margin: 0;
+    padding: var(--sp-16) var(--sp-8) var(--sp-16);
+    line-height: 1.6;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; }
+
+  .doc-title { font-size: 34px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 var(--sp-1); }
+  .doc-sub { color: var(--text-secondary); font-size: 15px; margin: 0 0 var(--sp-16); }
+
+  h2.section {
+    font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--primary-400); margin: 0 0 var(--sp-6); padding-top: var(--sp-2);
+    border-top: 1px solid var(--border);
+  }
+  section { margin-bottom: var(--sp-16); }
+  h3.sub { font-size: 14px; font-weight: 500; color: var(--text-secondary); margin: 0 0 var(--sp-3); }
+
+  /* Swatches */
+  .swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--sp-3); margin-bottom: var(--sp-6); }
+  .swatch { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); }
+  .swatch-color { height: 64px; }
+  .swatch-info { padding: var(--sp-2) var(--sp-3); background: var(--surface-card); }
+  .swatch-name { font-size: 13px; font-weight: 600; margin: 0 0 2px; }
+  .swatch-hex { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin: 0 0 4px; }
+  .swatch-use { font-size: 11px; color: var(--text-secondary); margin: 0; }
+
+  /* Typography samples */
+  .type-row { display: flex; align-items: baseline; gap: var(--sp-6); padding: var(--sp-4) 0; border-bottom: 1px solid var(--border); }
+  .type-row:last-child { border-bottom: none; }
+  .type-sample { flex: 1; }
+  .type-spec { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+  /* Spacing bars */
+  .space-row { display: flex; align-items: center; gap: var(--sp-4); margin-bottom: var(--sp-2); }
+  .space-bar { background: var(--primary-500); height: 12px; border-radius: 2px; }
+  .space-label { font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); width: 90px; }
+
+  /* Radius demo */
+  .radius-row { display: flex; gap: var(--sp-6); }
+  .radius-box { width: 90px; height: 90px; background: var(--surface-elevated); border: 1px solid var(--border-strong); display: flex; align-items: flex-end; justify-content: center; padding-bottom: var(--sp-2); }
+  .radius-box span { font-family: var(--font-mono); font-size: 11px; color: var(--text-secondary); }
+
+  /* Buttons */
+  .row { display: flex; gap: var(--sp-3); flex-wrap: wrap; align-items: center; margin-bottom: var(--sp-4); }
+  .btn { font-family: var(--font-ui); font-size: 14px; font-weight: 600; border-radius: var(--radius-md); padding: 10px 18px; border: none; cursor: default; }
+  .btn-primary { background: var(--primary-500); color: #0B0D11; }
+  .btn-primary.hover { background: var(--primary-400); }
+  .btn-primary.active { background: var(--primary-600); color: var(--text-primary); }
+  .btn-primary.disabled { background: var(--surface-elevated); color: var(--text-muted); }
+  .btn-secondary { background: transparent; color: var(--text-primary); border: 1px solid var(--border-strong); }
+  .state-label { font-size: 11px; color: var(--text-muted); display: block; text-align: center; margin-top: 4px; }
+  .btn-stack { display: flex; flex-direction: column; align-items: center; }
+
+  /* Inputs */
+  .field { display: flex; flex-direction: column; gap: 6px; width: 220px; }
+  .field label { font-size: 12px; color: var(--text-secondary); }
+  .field input {
+    font-family: var(--font-ui); font-size: 14px; color: var(--text-primary);
+    background: var(--surface-card); border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md); padding: 9px 12px;
+  }
+  .field.focus input { border-color: var(--primary-500); box-shadow: 0 0 0 3px var(--primary-tint); }
+  .field.error input { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-tint); }
+  .field.error .helper { color: var(--danger); font-size: 12px; }
+
+  /* Car card example */
+  .card { background: var(--surface-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; width: 260px; }
+  .card-image { height: 140px; background: var(--surface-elevated); display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 12px; }
+  .card-body { padding: var(--sp-4); }
+  .badge { display: inline-block; background: var(--primary-tint); color: var(--primary-400); font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: var(--radius-sm); margin-bottom: var(--sp-2); }
+  .card-title { font-size: 16px; font-weight: 600; margin: 0 0 var(--sp-1); }
+  .card-price { font-family: var(--font-mono); font-size: 18px; font-weight: 500; color: var(--text-primary); margin: 0 0 var(--sp-2); }
+  .card-specs { display: flex; gap: var(--sp-3); font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="doc-title">Johnsson Bilcenter — Grafiskt system</p>
+  <p class="doc-sub">v0.1 förslag · dark mode · till för granskning, inte facit</p>
+
+  <section>
+    <h2 class="section">Färger</h2>
+
+    <h3 class="sub">Ytor</h3>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#12141A"></div><div class="swatch-info"><p class="swatch-name">Midnight</p><p class="swatch-hex">#12141A</p><p class="swatch-use">Sidbakgrund</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1A1D24"></div><div class="swatch-info"><p class="swatch-name">Coal</p><p class="swatch-hex">#1A1D24</p><p class="swatch-use">Kort, fält</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#242832"></div><div class="swatch-info"><p class="swatch-name">Iron</p><p class="swatch-hex">#242832</p><p class="swatch-use">Hover, bildplatshållare</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#333947"></div><div class="swatch-info"><p class="swatch-name">Ash</p><p class="swatch-hex">#333947</p><p class="swatch-use">Kantlinje, default</p></div></div>
+    </div>
+
+    <h3 class="sub">Text</h3>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#F2F0EA"></div><div class="swatch-info"><p class="swatch-name">Linen</p><p class="swatch-hex">#F2F0EA</p><p class="swatch-use">Primär text (varmvit, ej ren vit)</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#A8AEBA"></div><div class="swatch-info"><p class="swatch-name">Mist</p><p class="swatch-hex">#A8AEBA</p><p class="swatch-use">Sekundär text</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#6B7280"></div><div class="swatch-info"><p class="swatch-name">Fog</p><p class="swatch-hex">#6B7280</p><p class="swatch-use">Placeholder, hjälptext</p></div></div>
+    </div>
+
+    <h3 class="sub">Primär — Cobalt (förfinad från nuvarande blått)</h3>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#7BA3FF"></div><div class="swatch-info"><p class="swatch-name">Cobalt 400</p><p class="swatch-hex">#7BA3FF</p><p class="swatch-use">Hover-läge</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#4A85FF"></div><div class="swatch-info"><p class="swatch-name">Cobalt 500</p><p class="swatch-hex">#4A85FF</p><p class="swatch-use">Primär knapp, länkar</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#2E63E0"></div><div class="swatch-info"><p class="swatch-name">Cobalt 600</p><p class="swatch-hex">#2E63E0</p><p class="swatch-use">Aktivt/nedtryckt läge</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1E48AD"></div><div class="swatch-info"><p class="swatch-name">Cobalt 700</p><p class="swatch-hex">#1E48AD</p><p class="swatch-use">Djup accent, sparsam</p></div></div>
+    </div>
+
+    <h3 class="sub">Semantiska</h3>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#34C77B"></div><div class="swatch-info"><p class="swatch-name">Success</p><p class="swatch-hex">#34C77B</p><p class="swatch-use">Skickat, bekräftat</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#F0B429"></div><div class="swatch-info"><p class="swatch-name">Warning</p><p class="swatch-hex">#F0B429</p><p class="swatch-use">Varning</p></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#EF5A5A"></div><div class="swatch-info"><p class="swatch-name">Danger</p><p class="swatch-hex">#EF5A5A</p><p class="swatch-use">Formulärfel</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">Typografi — Hanken Grotesk (UI/rubriker) + JetBrains Mono (siffror)</h2>
+    <div class="type-row"><div class="type-sample" style="font-size:40px;font-weight:700;letter-spacing:-0.02em;line-height:1.15">Gör ett smart bilköp</div><div class="type-spec">H1 · 40/700 · lh 1.15 · ls -0.02em</div></div>
+    <div class="type-row"><div class="type-sample" style="font-size:32px;font-weight:700;letter-spacing:-0.015em;line-height:1.2">Träffa grundaren</div><div class="type-spec">H2 · 32/700 · lh 1.2 · ls -0.015em</div></div>
+    <div class="type-row"><div class="type-sample" style="font-size:24px;font-weight:600;letter-spacing:-0.01em;line-height:1.25">Vanliga frågor</div><div class="type-spec">H3 · 24/600 · lh 1.25 · ls -0.01em</div></div>
+    <div class="type-row"><div class="type-sample" style="font-size:20px;font-weight:600;line-height:1.3">Finansiering hos oss</div><div class="type-spec">H4 · 20/600 · lh 1.3</div></div>
+    <div class="type-row"><div class="type-sample" style="font-size:18px;font-weight:400;line-height:1.6">Vi förstår vikten av att hitta en betalningsplan som passar din ekonomi.</div><div class="type-spec">Body L · 18/400 · lh 1.6</div></div>
+    <div class="type-row"><div class="type-sample" style="font-size:16px;font-weight:400;line-height:1.6;color:var(--text-secondary)">Fyll i formuläret nedan så svarar vi så snabbt som möjligt.</div><div class="type-spec">Body · 16/400 · lh 1.6</div></div>
+    <div class="type-row"><div class="type-sample" style="font-size:14px;font-weight:400;line-height:1.5;color:var(--text-secondary)">Vi delar inte din information med någon.</div><div class="type-spec">Small · 14/400 · lh 1.5</div></div>
+    <div class="type-row"><div class="type-sample" style="font-size:12px;font-weight:500;letter-spacing:0.03em;text-transform:uppercase;color:var(--text-muted)">Öppettider</div><div class="type-spec">Caption · 12/500 · ls 0.03em · versaler</div></div>
+    <div class="type-row"><div class="type-sample" style="font-family:var(--font-mono);font-size:20px;color:var(--primary-400)">289 900 kr</div><div class="type-spec">Mono/data · 20/400 · pris, miltal, reg.nr</div></div>
+  </section>
+
+  <section>
+    <h2 class="section">Spacing</h2>
+    <div class="space-row"><span class="space-label">4 — sp-1</span><div class="space-bar" style="width:4px"></div></div>
+    <div class="space-row"><span class="space-label">8 — sp-2</span><div class="space-bar" style="width:8px"></div></div>
+    <div class="space-row"><span class="space-label">12 — sp-3</span><div class="space-bar" style="width:12px"></div></div>
+    <div class="space-row"><span class="space-label">16 — sp-4</span><div class="space-bar" style="width:16px"></div></div>
+    <div class="space-row"><span class="space-label">24 — sp-6</span><div class="space-bar" style="width:24px"></div></div>
+    <div class="space-row"><span class="space-label">32 — sp-8</span><div class="space-bar" style="width:32px"></div></div>
+    <div class="space-row"><span class="space-label">48 — sp-12</span><div class="space-bar" style="width:48px"></div></div>
+    <div class="space-row"><span class="space-label">64 — sp-16</span><div class="space-bar" style="width:64px"></div></div>
+  </section>
+
+  <section>
+    <h2 class="section">Radie</h2>
+    <div class="radius-row">
+      <div class="radius-box" style="border-radius:4px"><span>sm · 4px</span></div>
+      <div class="radius-box" style="border-radius:8px"><span>md · 8px</span></div>
+      <div class="radius-box" style="border-radius:12px"><span>lg · 12px</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">Komponenter — knappar</h2>
+    <div class="row">
+      <div class="btn-stack"><button class="btn btn-primary">Skicka</button><span class="state-label">Default</span></div>
+      <div class="btn-stack"><button class="btn btn-primary hover">Skicka</button><span class="state-label">Hover</span></div>
+      <div class="btn-stack"><button class="btn btn-primary active">Skicka</button><span class="state-label">Aktiv</span></div>
+      <div class="btn-stack"><button class="btn btn-primary disabled">Skicka</button><span class="state-label">Inaktiv</span></div>
+      <div class="btn-stack"><button class="btn btn-secondary">Avbryt</button><span class="state-label">Sekundär</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">Komponenter — formulärfält</h2>
+    <div class="row">
+      <div class="field"><label>Förnamn</label><input placeholder="Ditt förnamn"></div>
+      <div class="field focus"><label>Telefonnummer</label><input placeholder="Ditt telefonnummer" value="073-"></div>
+      <div class="field error"><label>E-post</label><input value="ej-giltig"><span class="helper">Ange en giltig e-postadress</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section">Komponenter — objektkort (exempel)</h2>
+    <div class="card">
+      <div class="card-image">Bild</div>
+      <div class="card-body">
+        <span class="badge">Nyinkommen</span>
+        <p class="card-title">Volvo V60 D3</p>
+        <p class="card-price">289 900 kr</p>
+        <div class="card-specs"><span>2021</span><span>·</span><span>8 200 mil</span><span>·</span><span>Diesel</span></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
