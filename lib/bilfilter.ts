@@ -128,25 +128,35 @@ export function filtrera(bilar: Fordon[], filter: Filter): Fordon[] {
 export type Alternativ = { varde: string; antal: number };
 
 /**
- * Facett-alternativ för en grupp, med antal räknat mot filtret EXKL. den egna
- * gruppen (klassisk facetterad sök). Värden med 0 finns inte i mängden.
+ * Facett-alternativ för en grupp. Universum + ordning kommer från HELA lagret
+ * (aldrig från den filtrerade mängden) så listan och dess ordning är stabil —
+ * inga rader hoppar in/ut eller byter plats när man väljer andra filter. `antal`
+ * räknas mot filtret EXKL. egen grupp (klassisk facetterad sök); värden som ger
+ * 0 träffar visas gråtonade i UI:t i stället för att försvinna.
  */
 export function facettAlternativ(
   bilar: Fordon[],
   filter: Filter,
   grupp: Facettgrupp,
 ): Alternativ[] {
-  const utanEgen: Filter = { ...filter, [grupp]: [] };
-  const bas = filtrera(bilar, utanEgen);
-  const m = new Map<string, number>();
+  // Stabilt universum + ordning från hela lagret.
+  const total = new Map<string, number>();
+  for (const f of bilar) {
+    const v = f[grupp];
+    if (!v) continue;
+    total.set(v, (total.get(v) ?? 0) + 1);
+  }
+  // Aktuellt antal mot filtret exkl. egen grupp.
+  const bas = filtrera(bilar, { ...filter, [grupp]: [] });
+  const nu = new Map<string, number>();
   for (const f of bas) {
     const v = f[grupp];
     if (!v) continue;
-    m.set(v, (m.get(v) ?? 0) + 1);
+    nu.set(v, (nu.get(v) ?? 0) + 1);
   }
-  return [...m.entries()]
-    .map(([varde, antal]) => ({ varde, antal }))
-    .sort((a, b) => b.antal - a.antal || a.varde.localeCompare(b.varde, "sv"));
+  return [...total.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "sv"))
+    .map(([varde]) => ({ varde, antal: nu.get(varde) ?? 0 }));
 }
 
 /** Antal aktiva filterval (för "Rensa" och räknare). */

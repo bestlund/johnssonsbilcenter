@@ -135,27 +135,42 @@ export default function BilarBrowse({
           {FACETTER.map(({ grupp, rubrik }) => {
             let alt = facettAlternativ(bilar, filter, grupp);
             if (alt.length === 0) return null;
+            const valda = filter[grupp];
+            // Kapa märkeslistan men behåll alltid valda värden synliga.
             const kanKorta = grupp === "brand" && alt.length > MARKE_GRANS;
-            if (kanKorta && !visaAllaMarken) alt = alt.slice(0, MARKE_GRANS);
+            if (kanKorta && !visaAllaMarken) {
+              alt = alt.filter((a, i) => i < MARKE_GRANS || valda.includes(a.varde));
+            }
             return (
               <div key={grupp} className="mt-5 border-t border-line pt-4">
                 <p className="text-sm font-semibold text-linen">{rubrik}</p>
                 <div className="mt-2 space-y-0.5">
-                  {alt.map(({ varde, antal }) => (
-                    <button
-                      key={varde}
-                      type="button"
-                      aria-pressed={filter[grupp].includes(varde)}
-                      onClick={() => toggleFacett(grupp, varde)}
-                      className="flex w-full items-center gap-2.5 py-1 text-left"
-                    >
-                      <Kryssruta vald={filter[grupp].includes(varde)} />
-                      <span className="flex-1 truncate text-sm text-mist">
-                        {varde}
-                      </span>
-                      <span className="text-xs text-fog">{antal}</span>
-                    </button>
-                  ))}
+                  {alt.map(({ varde, antal }) => {
+                    const vald = valda.includes(varde);
+                    // 0 träffar och inte redan vald → gråtonad + ej klickbar,
+                    // men raden blir kvar (stabil layout, inget hopp).
+                    const inaktiv = antal === 0 && !vald;
+                    return (
+                      <button
+                        key={varde}
+                        type="button"
+                        disabled={inaktiv}
+                        aria-pressed={vald}
+                        onClick={() => toggleFacett(grupp, varde)}
+                        className={`flex w-full items-center gap-2.5 py-1 text-left ${
+                          inaktiv
+                            ? "cursor-not-allowed opacity-40"
+                            : "cursor-pointer"
+                        }`}
+                      >
+                        <Kryssruta vald={vald} />
+                        <span className="flex-1 truncate text-sm text-mist">
+                          {varde}
+                        </span>
+                        <span className="text-xs text-fog">{antal}</span>
+                      </button>
+                    );
+                  })}
                 </div>
                 {kanKorta && (
                   <button
@@ -175,7 +190,7 @@ export default function BilarBrowse({
             <button
               type="button"
               onClick={() => setVisaFler((v) => !v)}
-              className="flex w-full items-center justify-between text-sm font-semibold text-linen"
+              className="flex w-full cursor-pointer items-center justify-between text-sm font-semibold text-linen"
             >
               Fler filter
               <span
@@ -240,7 +255,7 @@ export default function BilarBrowse({
               id="sortering"
               value={sort}
               onChange={(e) => bytSort(e.target.value as Sortering)}
-              className="hero-sok-input h-11 rounded-lg border border-line-strong bg-card px-3 text-sm text-linen outline-none transition-colors focus:border-highlight"
+              className="hero-sok-input h-11 cursor-pointer rounded-lg border border-line-strong bg-card px-3 text-sm text-linen outline-none transition-colors focus:border-highlight"
             >
               {SORTERINGAR.map((s) => (
                 <option key={s.varde} value={s.varde}>

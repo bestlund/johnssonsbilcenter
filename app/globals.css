@@ -60,6 +60,13 @@
   --transition-fast: 150ms ease;
 }
 
+/* Reservera alltid plats för vertikala scrollbaren så att sidor som inte
+   överflödar (t.ex. /bilar filtrerat till få träffar) inte breddar viewporten
+   och får centrerat innehåll att hoppa i sidled. */
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background: var(--color-page);
   color: var(--color-linen);
@@ -196,6 +203,7 @@ h4 {
 .link {
   color: var(--color-cobalt-400);
   transition: color var(--transition-fast);
+  cursor: pointer;
 }
 .link:hover {
   text-decoration: underline;

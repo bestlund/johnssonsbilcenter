@@ -31,8 +31,12 @@ export default async function HeroA() {
             <GoogleOmdomeBadge data={omdomen} />
           </div>
 
-          {/* Flik-widget: Köpa (sök) / Sälja (reg.nr → värdering) */}
-          <div>
+          {/* Flik-widget: Köpa (sök) / Sälja (reg.nr → värdering).
+              Kolumnen reserverar Sälja-lägets höjd (det högsta) på lg så att
+              flikbytet inte ändrar kolumnhöjden och trycker ner bilrutnätet.
+              Reserven ligger på den transparenta kolumnen — inte inuti kortet —
+              så kortet behåller sin naturliga höjd (ingen skev tomrum). */}
+          <div className="lg:min-h-[460px]">
             <HeroFlikar totalt={totalt} sokBilar={sokBilar} />
 
             {/* Subtila sekundärtjänster. Destinationer ej bestämda än. */}
