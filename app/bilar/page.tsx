@@ -3,7 +3,11 @@ import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
 import BilarBrowse from "./BilarBrowse";
 import { hamtaAllaFordon } from "@/lib/nextlease";
-import { filterFranParams } from "@/lib/bilfilter";
+import {
+  filterFranParams,
+  arSortering,
+  type Sortering,
+} from "@/lib/bilfilter";
 
 export const metadata: Metadata = {
   title: "Våra bilar — Johnsson Bilcenter",
@@ -22,7 +26,11 @@ export default async function BilarPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { fordon, totalt } = await hamtaAllaFordon();
-  const start = filterFranParams(await searchParams);
+  const sp = await searchParams;
+  const start = filterFranParams(sp);
+  const sortParam = Array.isArray(sp.sort) ? sp.sort[0] : sp.sort;
+  const startSort: Sortering =
+    sortParam && arSortering(sortParam) ? sortParam : "rekommenderad";
 
   return (
     <>
@@ -33,7 +41,7 @@ export default async function BilarPage({
             <h1>Våra bilar</h1>
             <p className="text-mist">{totalt} bilar i lager</p>
           </div>
-          <BilarBrowse bilar={fordon} start={start} />
+          <BilarBrowse bilar={fordon} start={start} startSort={startSort} />
         </section>
       </main>
       <SiteFooter />
