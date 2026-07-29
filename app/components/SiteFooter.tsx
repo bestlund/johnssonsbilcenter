@@ -6,7 +6,7 @@ const KOLUMNER = [
     rubrik: "Tjänster",
     lankar: [
       { label: "Sälj din bil", href: "/salj-din-bil" },
-      { label: "Förmedling", href: "/formedling" },
+      { label: "Förmedla din bil", href: "/formedling" },
       { label: "Finansiering", href: "/tjanster/finansiering" },
       { label: "Garanti", href: "/tjanster/garanti" },
     ],
@@ -96,9 +96,17 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col justify-between gap-3 border-t border-line pt-6 text-xs text-fog sm:flex-row">
+        <div className="mt-10 flex flex-col justify-between gap-3 border-t border-line pt-6 text-xs text-fog sm:flex-row sm:items-center">
           <p>© {new Date().getFullYear()} Johnsson Bilcenter AB</p>
-          <p>Mån–fre 10:00–18:00 · Lör 11:00–15:00</p>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <span>Mån–fre 10:00–18:00 · Lör 11:00–15:00</span>
+            <Link
+              href="/integritetspolicy"
+              className="transition-colors hover:text-linen"
+            >
+              Integritetspolicy
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

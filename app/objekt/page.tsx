@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
-import NextleaseWidget from "@/app/components/NextleaseWidget";
-import { DEALER_UID } from "@/lib/nextlease";
+import NextleaseFrame from "./NextleaseFrame";
 
 export const metadata: Metadata = {
   title: "Objekt — Johnsson Bilcenter",
@@ -21,8 +20,8 @@ export default function ObjektPage() {
     <>
       <SiteHeader />
       <main className="flex-1">
-        <section className="shell py-10 lg:py-14">
-          <NextleaseWidget uid={DEALER_UID} />
+        <section className="shell pt-16 pb-10 lg:pt-24 lg:pb-14">
+          <NextleaseFrame />
         </section>
       </main>
       <SiteFooter />

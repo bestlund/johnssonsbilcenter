@@ -22,8 +22,10 @@ export default async function HeroA() {
 
   return (
     <section className="shell flex flex-col pb-12">
-      {/* Hero-block — centreras i exakt 65dvh, identisk spacing som variant C */}
-      <div className="flex min-h-[65dvh] items-center py-10">
+      {/* Hero-block — top-justerat med standard nav-gap (pt-16 lg:pt-24, samma som
+          övriga sidor). min-h-[65dvh] behålls så bilrutnätet fortfarande skär
+          vikningen längst ned. */}
+      <div className="min-h-[65dvh] pt-16 lg:pt-24">
         <div className="grid w-full gap-12 lg:grid-cols-[1.15fr_1fr] lg:items-start lg:gap-20">
           <div>
             <h1 className="text-[clamp(2.25rem,5vw,3.25rem)]">{RUBRIK}</h1>
@@ -50,12 +52,12 @@ export default async function HeroA() {
               <span className="text-fog" aria-hidden="true">
                 ·
               </span>
-              <button
-                type="button"
-                className="hero-sok-input text-cobalt-400 transition-colors hover:underline focus-visible:underline"
+              <Link
+                href="/formedling"
+                className="text-cobalt-400 transition-colors hover:underline focus-visible:underline"
               >
                 Sälj via förmedling
-              </button>
+              </Link>
             </div>
           </div>
         </div>

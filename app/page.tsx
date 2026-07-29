@@ -1,9 +1,5 @@
 import SiteHeader from "@/app/components/SiteHeader";
 import HeroA from "@/app/components/hero/HeroA";
-import HeroB from "@/app/components/hero/HeroB";
-import HeroC from "@/app/components/hero/HeroC";
-import HeroValjare from "@/app/components/hero/HeroValjare";
-import BilarILager from "@/app/components/BilarILager";
 import Tjanster from "@/app/components/Tjanster";
 import Grundare from "@/app/components/Grundare";
 import Oppettider from "@/app/components/Oppettider";
@@ -13,26 +9,16 @@ import Kontaktformular from "@/app/components/Kontaktformular";
 import SiteFooter from "@/app/components/SiteFooter";
 
 /**
- * Sektionsordning enligt Jakobs lag — transaktionellt först, berättande sedan.
- *
- * OBS: hero-varianterna A/B/C + väljaren är TILLFÄLLIGA för jämförelse.
- * När valet är gjort: behåll en variant, ta bort de andra, väljaren och
- * searchParams-logiken (då blir sidan statisk igen).
+ * Startsida. Sektionsordning enligt Jakobs lag — transaktionellt först,
+ * berättande sedan. Hero-varianten är låst till A; HeroA innehåller sitt eget
+ * lagerurval (bilkort), så ingen separat BilarILager behövs här.
  */
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ hero?: string }>;
-}) {
-  const variant = (await searchParams).hero ?? "c";
-
+export default function Home() {
   return (
     <>
       <SiteHeader />
       <main className="flex-1">
-        {variant === "a" ? <HeroA /> : variant === "b" ? <HeroB /> : <HeroC />}
-        {/* Variant A innehåller lagerurvalet själv */}
-        {variant !== "a" && <BilarILager />}
+        <HeroA />
         <Oppettider />
         <Omdomen />
         <Grundare />
@@ -41,7 +27,6 @@ export default async function Home({
         <Kontaktformular />
       </main>
       <SiteFooter />
-      <HeroValjare aktiv={variant} />
     </>
   );
 }

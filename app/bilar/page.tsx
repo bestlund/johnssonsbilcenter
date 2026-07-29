@@ -36,7 +36,7 @@ export default async function BilarPage({
     <>
       <SiteHeader />
       <main className="flex-1">
-        <section className="shell py-10 lg:py-14">
+        <section className="shell pt-16 pb-10 lg:pt-24 lg:pb-14">
           <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
             <h1>Våra bilar</h1>
             <p className="text-mist">{totalt} bilar i lager</p>

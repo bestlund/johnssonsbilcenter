@@ -16,12 +16,20 @@ const VAGBESKRIVNING = `https://www.google.com/maps/dir/?api=1&destination=${enc
  * vänster (öppettider överst, adress under), karta till höger som fyller höjden.
  * Full sektionsbredd (.shell) i linje med övriga sektioner.
  */
-export default function Oppettider() {
+export default function Oppettider({
+  visaRubrik = true,
+}: {
+  visaRubrik?: boolean;
+}) {
   return (
     <section className="shell py-14 lg:py-20">
-      <h2>Besök oss</h2>
+      {visaRubrik && <h2>Besök oss</h2>}
 
-      <div className="card mt-8 grid overflow-hidden lg:grid-cols-2">
+      <div
+        className={`card grid overflow-hidden lg:grid-cols-2 ${
+          visaRubrik ? "mt-8" : ""
+        }`}
+      >
         {/* Info till vänster */}
         <div className="p-6 lg:p-8">
           {/* Öppettider överst */}

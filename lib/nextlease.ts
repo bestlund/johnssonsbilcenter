@@ -63,36 +63,9 @@ async function hamtaAlla(): Promise<HamtResultat> {
   }
 }
 
-/** De första `antal` fordonen ur lagret (t.ex. för lagerantal i heron). */
-export async function hamtaFordon(antal = 4): Promise<HamtResultat> {
-  const { fordon, totalt } = await hamtaAlla();
-  return { fordon: fordon.slice(0, antal), totalt };
-}
-
-/** Hela lagret — för hero-typeahead som filtrerar på klientsidan. */
+/** Hela lagret — för browse (/bilar) och hero-typeahead som filtrerar på klientsidan. */
 export async function hamtaAllaFordon(): Promise<HamtResultat> {
   return hamtaAlla();
-}
-
-/**
- * `antal` slumpvis valda fordon ur hela lagret. Blandas per anrop — på en
- * dynamiskt renderad sida blir det nya bilar vid varje besök, och sålda/
- * borttagna bilar försvinner automatiskt (inom cache-fönstret på 1h). Inga
- * hårdkodade bilar.
- */
-export async function hamtaSlumpadeFordon(antal = 5): Promise<HamtResultat> {
-  const { fordon, totalt } = await hamtaAlla();
-  return { fordon: blanda(fordon).slice(0, antal), totalt };
-}
-
-/** Fisher–Yates — opartisk blandning (till skillnad från sort(()=>Math.random())). */
-function blanda<T>(arr: T[]): T[] {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
 }
 
 /** 15958 → "15 958 mil" osv. Svensk tusenavgränsare. */

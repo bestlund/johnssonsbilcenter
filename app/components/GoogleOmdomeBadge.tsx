@@ -54,7 +54,17 @@ function korta(text: string) {
  * rotationen (klient). Pausar vid hover; fade-animationen respekterar
  * prefers-reduced-motion via den globala regeln i globals.css.
  */
-export default function GoogleOmdomeBadge({ data }: { data: GoogleOmdomen }) {
+export default function GoogleOmdomeBadge({
+  data,
+  visaCitat = true,
+  centrerad = false,
+}: {
+  data: GoogleOmdomen;
+  /** Visa det roterande citat-kortet + prickar (av: bara betygsbadgen). */
+  visaCitat?: boolean;
+  /** Centrera badgen (utan vänsterankrad nedskalning) i stället för A:s vänsterläge. */
+  centrerad?: boolean;
+}) {
   const { betyg, antal, lank, recensioner } = data;
   const [i, setI] = useState(0);
   const [pausad, setPausad] = useState(false);
@@ -73,7 +83,11 @@ export default function GoogleOmdomeBadge({ data }: { data: GoogleOmdomen }) {
 
   return (
     <div
-      className="mt-12 max-w-md origin-top-left scale-[0.8]"
+      className={
+        centrerad
+          ? "mt-10 flex flex-col items-center"
+          : "mt-12 max-w-md origin-top-left scale-[0.8]"
+      }
       onMouseEnter={() => setPausad(true)}
       onMouseLeave={() => setPausad(false)}
     >
@@ -91,7 +105,7 @@ export default function GoogleOmdomeBadge({ data }: { data: GoogleOmdomen }) {
       </a>
 
       {/* Roterande citat — ej klickbart (kortet), betygsbadgen ovan länkar till Google */}
-      {aktuell && (
+      {visaCitat && aktuell && (
         <div className="mt-3 rounded-lg border border-line bg-card/60 p-4">
           <figure key={i} className="animate-fade">
             <blockquote className="text-sm leading-relaxed text-mist">
@@ -124,7 +138,7 @@ export default function GoogleOmdomeBadge({ data }: { data: GoogleOmdomen }) {
       )}
 
       {/* Rotationsprickar */}
-      {recensioner.length > 1 && (
+      {visaCitat && recensioner.length > 1 && (
         <div className="mt-3 flex gap-1.5">
           {recensioner.map((_, n) => (
             <button

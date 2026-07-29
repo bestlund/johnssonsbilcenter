@@ -21,7 +21,7 @@ export default async function SaljDinBil({
   return (
     <>
       <SiteHeader />
-      <main className="shell flex-1 py-20 lg:py-28">
+      <main className="shell flex-1 pt-16 pb-20 lg:pt-24 lg:pb-28">
         <h1 className="max-w-2xl">Sälj din bil till Johnsson Bilcenter</h1>
         <p className="body-lg mt-5 max-w-xl text-mist">
           Vi köper och förmedlar begagnade bilar — rättvist bud, kostnadsfri
