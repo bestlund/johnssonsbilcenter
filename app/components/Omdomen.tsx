@@ -129,12 +129,9 @@ export default async function Omdomen() {
 
   return (
     // Ljus sektion — temaundantaget. Full-bredds cream-yta, innehåll i .shell.
-    // .frame ritar cobalt-hörnramen (blueprint-accenten).
-    <section className="section-light frame">
+    <section className="section-light">
       <div className="shell py-14 lg:py-20">
         <div className="flex flex-wrap items-end justify-between gap-6">
-          <h2>Riktiga affärer, riktiga ord</h2>
-
           {/* Betygsbadge — live siffror, länkar till Google */}
           <a
             href={data.lank}

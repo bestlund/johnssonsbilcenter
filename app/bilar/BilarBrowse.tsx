@@ -243,11 +243,7 @@ export default function BilarBrowse({
               className="hero-sok-input h-11 w-full rounded-lg border border-line-strong bg-card pl-11 pr-4 text-base text-linen outline-none transition-colors placeholder:text-fog focus:border-highlight"
             />
           </div>
-          <div className="flex items-center justify-between gap-3 sm:justify-end">
-            <span className="whitespace-nowrap text-sm text-mist">
-              <span className="font-semibold text-linen">{resultat.length}</span>{" "}
-              {resultat.length === 1 ? "bil" : "bilar"}
-            </span>
+          <div className="flex items-center justify-end gap-3">
             <label className="sr-only" htmlFor="sortering">
               Sortera
             </label>

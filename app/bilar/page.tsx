@@ -39,7 +39,10 @@ export default async function BilarPage({
         <section className="shell pt-16 pb-10 lg:pt-24 lg:pb-14">
           <div className="mb-6 flex flex-wrap items-baseline justify-between gap-2">
             <h1>Våra bilar</h1>
-            <p className="text-mist">{totalt} bilar i lager</p>
+            <p className="text-mist">
+              <span className="font-semibold text-linen">{totalt}</span> bilar i
+              lager
+            </p>
           </div>
           <BilarBrowse bilar={fordon} start={start} startSort={startSort} />
         </section>

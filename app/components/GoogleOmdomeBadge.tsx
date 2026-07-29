@@ -101,7 +101,10 @@ export default function GoogleOmdomeBadge({
         <GoogleG className="h-5 w-5" />
         <Stjarnor />
         <span className="text-sm font-semibold text-linen">{betygText}</span>
-        <span className="text-sm text-mist">· {antal} omdömen</span>
+        {/* Separator som rund prick (flex centrerar den vertikalt, jämnt gap) i
+            stället för en middot i texten som satt lite för högt. */}
+        <span className="h-1 w-1 rounded-full bg-mist" aria-hidden="true" />
+        <span className="text-sm text-mist">{antal} omdömen</span>
       </a>
 
       {/* Roterande citat — ej klickbart (kortet), betygsbadgen ovan länkar till Google */}

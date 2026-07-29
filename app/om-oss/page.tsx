@@ -30,11 +30,6 @@ export default function OmOss() {
             <h1 className="text-[clamp(2.5rem,6vw,4rem)]">
               Vi siktar på att bli Sveriges största märkesoberoende bilfirma
             </h1>
-            <p className="body-lg mt-5 text-mist">
-              Med lång erfarenhet, personlig service och trygga garantier hjälper
-              vi privatpersoner att köpa, sälja, byta och värdera begagnade bilar
-              i Helsingborg med omnejd.
-            </p>
             <ul className="mt-8 flex flex-wrap justify-center gap-2">
               {VARDEORD.map((ord) => (
                 <li key={ord} className="badge badge-neutral">
@@ -57,7 +52,7 @@ export default function OmOss() {
           </div>
 
           {/* Statement */}
-          <h2 className="mt-14 max-w-4xl text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight">
+          <h2 className="mt-20 max-w-4xl text-[clamp(1.75rem,3.5vw,2.75rem)] font-bold leading-tight lg:mt-24">
             Med lång erfarenhet inom fordonshandel har vi vuxit till en trygg och
             pålitlig bilhandlare för privatpersoner i Helsingborg.
           </h2>
@@ -65,9 +60,9 @@ export default function OmOss() {
 
         {/* 2. Grundaren — tätt under statementet (litet top-gap så de hänger ihop),
             utan egen rubrik. id="grundaren" behålls för ankarlänkar. */}
-        <section id="grundaren" className="shell scroll-mt-24 pt-8 pb-16 lg:pt-10 lg:pb-24">
+        <section id="grundaren" className="shell scroll-mt-24 pt-16 pb-16 lg:pt-24 lg:pb-24">
           <div className="grid items-center gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
-            <div className="relative mx-auto aspect-square w-64 shrink-0 overflow-hidden rounded-[4px] bg-elevated lg:w-72">
+            <div className="relative mx-auto aspect-square w-64 shrink-0 overflow-hidden rounded-lg bg-elevated lg:w-72">
               <Image
                 src="/bilder/simon-portratt.webp"
                 alt="Simon Johnsson, grundare och ägare"

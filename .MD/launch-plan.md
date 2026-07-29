@@ -111,7 +111,7 @@ projekt) — leads ska landa i **Gmail** som strukturerade mejl.
 
 ## Milstolpe 5 — UX-polish  · **P1/P2**
 - [x] **P0** Hero låst till A — HeroB, HeroC och `HeroValjare` **raderade**; startsidan statisk igen (ingen `?hero`)
-- [ ] **P1** Fix: ojämnt mellanrum mellan betyg och "· 61 omdömen" i hero-badgen (quick win)
+- [x] **P1** Fix: ojämnt mellanrum/separator i hero-badgen — middot bytt mot centrerad rund prick
 - [ ] **P1** Mobil-nav (hamburger) — saknas
 - [ ] **P2** Navbar: adress med ikon
 - [x] Navbar-dropdown-mönster på plats ("Sälj bil" → Sälj/Förmedla, CSS-only hover/focus)
