@@ -103,4 +103,4 @@ export const RUBRIK = (
 );
 
 export const BRODTEXT =
-  "Vi säljer, köper, byter och förmedlar begagnade bilar — med varudeklaration på varje affär.";
+  "Vi säljer, köper, byter och förmedlar begagnade bilar, med varudeklaration på varje affär.";

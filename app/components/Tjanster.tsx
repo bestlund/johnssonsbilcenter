@@ -13,7 +13,7 @@ const TJANSTER = [
   },
   {
     titel: "Finansiering",
-    text: "Finansiering utan krav på kontantinsats, upp till 350 000 kr. Vi anpassar betalningsplanen efter din månadskostnad — och du får en kostnadsfri prova-på-helförsäkring vid köp.",
+    text: "Finansiering utan krav på kontantinsats, upp till 350 000 kr. Vi anpassar betalningsplanen efter din månadskostnad, och du får en kostnadsfri prova-på-helförsäkring vid köp.",
     cta: "Läs mer här",
     href: "/tjanster/finansiering",
     bild: `${BAS}tjanst-finansiering.webp`,

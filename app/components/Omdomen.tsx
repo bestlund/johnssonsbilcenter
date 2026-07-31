@@ -11,7 +11,7 @@ import { hamtaGoogleOmdomen } from "@/lib/googleReviews";
 const RESERV_UTVALT = {
   namn: "Håkan Lindbergh",
   kontext: "Köpte Toyota Yaris · Google",
-  text: "Forden strejkade i kylan, ringde Simon och några timmar senare satt vi i en varm Yaris — efter en enkelt genomförd affär som vi känner oss trygga med. Forden blev inbytet. Tack Simon!",
+  text: "Forden strejkade i kylan, ringde Simon och några timmar senare satt vi i en varm Yaris, efter en enkelt genomförd affär som vi känner oss trygga med. Forden blev inbytet. Tack Simon!",
   betyg: 5,
 };
 

@@ -143,7 +143,7 @@ export default function Formedling() {
                 </div>
                 <div className="sm:col-span-2">
                   <button type="submit" className="btn btn-primary w-full">
-                    Skicka →
+                    Skicka
                   </button>
                 </div>
               </form>

@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type NavItem = {
   label: string;
@@ -20,6 +23,11 @@ const NAV: NavItem[] = [
   { label: "Om oss", href: "/om-oss" },
   { label: "Kontakta oss", href: "/kontakt" },
 ];
+
+const ADRESS = "Florettgatan 8, 254 67 Helsingborg";
+const KARTA_LANK = `https://maps.google.com/maps?q=${encodeURIComponent(
+  `Johnsson Bilcenter AB, ${ADRESS}`,
+)}`;
 
 function ChevronIkon({ className = "" }: { className?: string }) {
   return (
@@ -70,22 +78,31 @@ function MailIkon({ className = "" }: { className?: string }) {
 
 /**
  * §7.9 Navigation. Två lager:
- *  1. Utility-bar (sekundär info: adress, öppettider, e-post) — döljs på mobil
- *     och scrollar bort.
+ *  1. Utility-bar (sekundär info: adress → maps, öppettider, e-post) — döljs på
+ *     mobil och scrollar bort.
  *  2. Huvudnav — sticky (top-0), solid bg + underkant. Telefon kvar som CTA.
- * Allt i .shell så logo/telefon linjerar med sidans innehåll.
+ * Aktiv sida markeras via usePathname → därför klientkomponent.
  */
 export default function SiteHeader() {
+  const pathname = usePathname();
+  const arAktiv = (href: string) =>
+    pathname === href || pathname.startsWith(`${href}/`);
+
   return (
     <header>
       {/* 1. Utility-bar — döljs på mobil, ligger i normalt flöde (scrollar bort) */}
       <div className="hidden border-b border-line bg-card lg:block">
         <div className="shell flex items-center justify-between gap-6 py-2 text-xs text-mist">
           <div className="flex items-center gap-6">
-            <span className="inline-flex items-center gap-1.5">
+            <a
+              href={KARTA_LANK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 transition-colors hover:text-linen"
+            >
               <PinIkon className="h-3.5 w-3.5 text-cobalt-400" />
-              Florettgatan 8, 254 67 Helsingborg
-            </span>
+              {ADRESS}
+            </a>
             <span className="inline-flex items-center gap-1.5">
               <KlockIkon className="h-3.5 w-3.5 text-cobalt-400" />
               Mån–fre 10:00–18:00 · Lör 11:00–15:00
@@ -120,14 +137,19 @@ export default function SiteHeader() {
           </Link>
 
           <nav className="hidden items-center gap-8 justify-self-center lg:flex">
-            {NAV.map((item) =>
-              item.barn ? (
+            {NAV.map((item) => {
+              const aktiv =
+                arAktiv(item.href) || !!item.barn?.some((b) => arAktiv(b.href));
+              return item.barn ? (
                 // Dropdown (CSS-only: group-hover + focus-within). pt-3 bildar en
                 // osynlig "brygga" så hovern inte tappas mellan trigger och panel.
                 <div key={item.href} className="group relative">
                   <Link
                     href={item.href}
-                    className="small inline-flex items-center gap-1 text-mist transition-colors hover:text-linen group-focus-within:text-linen group-hover:text-linen"
+                    aria-current={aktiv ? "page" : undefined}
+                    className={`small inline-flex items-center gap-1 transition-colors group-hover:text-linen group-focus-within:text-linen ${
+                      aktiv ? "text-linen" : "text-mist hover:text-linen"
+                    }`}
                   >
                     {item.label}
                     <ChevronIkon className="h-3 w-3 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
@@ -138,7 +160,10 @@ export default function SiteHeader() {
                         <Link
                           key={b.href}
                           href={b.href}
-                          className="block rounded-md px-3 py-2 text-sm text-mist transition-colors hover:bg-elevated hover:text-linen"
+                          aria-current={arAktiv(b.href) ? "page" : undefined}
+                          className={`block rounded-md px-3 py-2 text-sm transition-colors hover:bg-elevated hover:text-linen ${
+                            arAktiv(b.href) ? "bg-elevated text-linen" : "text-mist"
+                          }`}
                         >
                           {b.label}
                         </Link>
@@ -150,12 +175,15 @@ export default function SiteHeader() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="small text-mist transition-colors hover:text-linen"
+                  aria-current={aktiv ? "page" : undefined}
+                  className={`small transition-colors ${
+                    aktiv ? "text-linen" : "text-mist hover:text-linen"
+                  }`}
                 >
                   {item.label}
                 </Link>
-              ),
-            )}
+              );
+            })}
           </nav>
 
           <a

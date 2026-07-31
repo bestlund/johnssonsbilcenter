@@ -113,8 +113,10 @@ projekt) — leads ska landa i **Gmail** som strukturerade mejl.
 - [x] **P0** Hero låst till A — HeroB, HeroC och `HeroValjare` **raderade**; startsidan statisk igen (ingen `?hero`)
 - [x] **P1** Fix: ojämnt mellanrum/separator i hero-badgen — middot bytt mot centrerad rund prick
 - [ ] **P1** Mobil-nav (hamburger) — saknas
-- [ ] **P2** Navbar: adress med ikon
+- [x] **P2** Navbar: adress med ikon (i utility-baren, klickbar → maps)
 - [x] Navbar-dropdown-mönster på plats ("Sälj bil" → Sälj/Förmedla, CSS-only hover/focus)
+- [x] Navbar utbyggd: **utility-bar** (adress→maps, öppettider, e-post; döljs mobil),
+  **sticky huvudnav** (solid bg + underkant), **active state** per sida (usePathname)
 - [ ] **P2** Ev. "Våra objekt"-dropdown med filter-genvägar + fler mikrointeraktioner
   (Jacob vill ha, omfattning ej spikad)
 - [ ] **P2** Utmärkelse-/förtroende-badgar i footern (t.ex. `hero-2.webp`

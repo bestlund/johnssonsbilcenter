@@ -24,7 +24,7 @@ export default async function SaljDinBil({
       <main className="shell flex-1 pt-16 pb-20 lg:pt-24 lg:pb-28">
         <h1 className="max-w-2xl">Sälj din bil till Johnsson Bilcenter</h1>
         <p className="body-lg mt-5 max-w-xl text-mist">
-          Vi köper och förmedlar begagnade bilar — rättvist bud, kostnadsfri
+          Vi köper och förmedlar begagnade bilar. Rättvist bud och kostnadsfri
           värdering.
         </p>
 
@@ -36,7 +36,7 @@ export default async function SaljDinBil({
         ) : null}
 
         <p className="mt-6 max-w-xl text-mist">
-          Vårt digitala värderingsflöde byggs just nu. Under tiden — hör av dig så
+          Vårt digitala värderingsflöde byggs just nu. Under tiden, hör av dig så
           återkommer vi snabbt med en värdering
           {reg ? ` för ${reg}` : ""}.
         </p>

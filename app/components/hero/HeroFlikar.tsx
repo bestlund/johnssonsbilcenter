@@ -117,7 +117,7 @@ export default function HeroFlikar({
               Vad är din bil värd?
             </p>
             <p className="small mt-1 text-mist">
-              Kostnadsfri värdering — rättvist bud, direkt eller via förmedling.
+              Kostnadsfri värdering, rättvist bud direkt eller via förmedling.
             </p>
 
             <form onSubmit={submitSalj} className="mt-5">
