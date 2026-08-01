@@ -1,17 +1,17 @@
 const FRAGOR = [
   {
     fraga: "Hur kan jag veta om min bil är redo för försäljning eller inbyte?",
-    svar: "Vi rekommenderar att du genomför en noggrann inspektion av din bil för att bedöma dess skick och värde. Du kan också kontakta oss för en kostnadsfri bedömning och rådgivning om försäljning eller inbyte.",
+    svar: "Enklast är att höra av dig till oss. Vi tittar på bilen och ger dig en kostnadsfri värdering, helt utan krångel.",
   },
   {
     fraga:
-      "Vad är fördelarna med att köpa en begagnad bil från S. Johnsson Bilcenter?",
-    svar: "Vi erbjuder ett brett utbud av högkvalitativa begagnade bilar som har genomgått noggrann inspektion och reparation vid behov. Dessutom erbjuder vi konkurrenskraftiga priser och flexibel bilfinansiering för att göra bilköpet så enkelt och prisvärt som möjligt för våra kunder.",
+      "Vad är fördelarna med att köpa en begagnad bil från Johnsson Bilcenter?",
+    svar: "Varje bil är genomgången innan den når dig, och du får hjälp med finansiering om du vill. Vårt mål är att bilköpet ska kännas enkelt, inte krångligt.",
   },
   {
     fraga:
       "Vilka åtgärder bör jag vidta innan jag besöker er för att köpa en bil?",
-    svar: "Innan ditt besök hos oss rekommenderar vi att du forskar om olika bilmodeller och priser, samt att du fastställer din budget och dina behov. Dessutom är det en bra idé att kontakta oss i förväg för att boka en provkörning och få personlig rådgivning baserat på dina önskemål och preferenser.",
+    svar: "Ring eller mejla gärna innan du kommer, så har vi bilen redo och kan boka in en provkörning direkt. Extra bra att höra av sig i förväg, eftersom bilarna ofta säljs snabbt.",
   },
 ];
 

@@ -12,10 +12,10 @@ export const metadata = {
 const VARDEORD = ["Omtanke", "Service", "Trygghet", "Passion"];
 
 const ERBJUDER = [
-  "Högkvalitativa begagnade bilar som kontrolleras innan de når dig.",
-  "Flexibel finansiering anpassad efter din månadskostnad, utan kontantinsats.",
-  "Garantier och servicepaket som gör hela bilaffären trygg och säker.",
-  "Personlig service där vi lyssnar och skräddarsyr lösningar för just dig.",
+  "Bilar som är genomgångna innan de når dig, så du slipper överraskningar.",
+  "Finansiering anpassad efter din ekonomi. Vi hittar ett upplägg som funkar för dig.",
+  "Garanti och service som gör att tryggheten håller i sig långt efter köpet.",
+  "Personlig service hela vägen. Vi lyssnar innan vi föreslår något.",
 ];
 
 export default function OmOss() {
@@ -95,8 +95,8 @@ export default function OmOss() {
           <div className="card p-6 lg:p-10">
             <h2>Vad vi erbjuder</h2>
             <p className="mt-4 max-w-xl text-mist">
-              Vi prioriterar dina unika behov och erbjuder skräddarsydda
-              lösningar som gör bilköpet till en smidig upplevelse.
+              Vi lyssnar på vad du behöver och hittar en lösning som passar, så
+              att bilköpet känns enkelt från start till mål.
             </p>
             <ul className="mt-6 space-y-3">
               {ERBJUDER.map((text) => (

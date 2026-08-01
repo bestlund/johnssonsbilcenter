@@ -13,14 +13,14 @@ const TJANSTER = [
   },
   {
     titel: "Finansiering",
-    text: "Finansiering utan krav på kontantinsats, upp till 350 000 kr. Vi anpassar betalningsplanen efter din månadskostnad, och du får en kostnadsfri prova-på-helförsäkring vid köp.",
+    text: "Vi hittar ett finansieringsupplägg som passar din ekonomi, i samarbete med flera partners. Testa dessutom försäkringen kostnadsfritt i 14 dagar vid köp.",
     cta: "Läs mer här",
     href: "/tjanster/finansiering",
     bild: `${BAS}tjanst-finansiering.webp`,
   },
   {
     titel: "Garanti",
-    text: "Vi erbjuder en trygg affär med vår trafiksäkerhetsgaranti från köpdatumet. Välj den täckning som passar dina behov.",
+    text: "Trygghet som håller i sig. Teckna garanti på varje bil vi säljer, mellan 6 och 24 månader beroende på miltal och årsmodell.",
     cta: "Läs mer här",
     href: "/tjanster/garanti",
     bild: `${BAS}tjanst-garanti.webp`,
