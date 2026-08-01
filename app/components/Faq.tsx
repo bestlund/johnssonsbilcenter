@@ -24,7 +24,7 @@ export default function Faq() {
       <div className="mt-8">
         {FRAGOR.map((f) => (
           <details key={f.fraga} className="group border-b border-line py-4">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-6">
+            <summary className="pressable -mx-3 flex cursor-pointer list-none items-center justify-between gap-6 rounded-md px-3 py-1">
               <span className="text-[15px] font-medium">{f.fraga}</span>
               <span
                 aria-hidden

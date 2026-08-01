@@ -96,7 +96,7 @@ export default function GoogleOmdomeBadge({
         href={lank}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-2.5 transition-opacity hover:opacity-80"
+        className="inline-flex items-center gap-2.5 transition-opacity hover:opacity-80 active:opacity-60"
       >
         <GoogleG className="h-5 w-5" />
         <Stjarnor />
@@ -109,7 +109,7 @@ export default function GoogleOmdomeBadge({
 
       {/* Roterande citat — ej klickbart (kortet), betygsbadgen ovan länkar till Google */}
       {visaCitat && aktuell && (
-        <div className="mt-3 rounded-lg border border-line bg-card/60 p-4">
+        <div className="mt-3 hidden rounded-lg border border-line bg-card/60 p-4 sm:block">
           <figure key={i} className="animate-fade">
             <blockquote className="text-sm leading-relaxed text-mist">
               &ldquo;{korta(aktuell.text)}&rdquo;
@@ -142,7 +142,7 @@ export default function GoogleOmdomeBadge({
 
       {/* Rotationsprickar */}
       {visaCitat && recensioner.length > 1 && (
-        <div className="mt-3 flex gap-1.5">
+        <div className="mt-3 hidden gap-1.5 sm:flex">
           {recensioner.map((_, n) => (
             <button
               key={n}

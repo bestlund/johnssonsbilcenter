@@ -75,6 +75,17 @@ body {
   line-height: 1.6;
 }
 
+/* Vår egen press-feedback (.btn/.link/.pressable) styr all klick-återkoppling —
+   döda webbläsarens default tap-highlight på touch så vi inte får dubbel ruta. */
+a,
+button,
+summary,
+select,
+label,
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* §2 Skala — rubriker */
 h1 {
   font-size: clamp(2rem, 5vw, 2.5rem);
@@ -134,8 +145,13 @@ h4 {
   border-radius: var(--radius-md);
   padding: 10px 18px;
   transition: background-color var(--transition-fast),
-    border-color var(--transition-fast), color var(--transition-fast);
+    border-color var(--transition-fast), color var(--transition-fast),
+    transform var(--transition-fast);
   cursor: pointer;
+}
+/* Premium-press: subtil fysisk nedtryckning. Färgmörkning per variant nedan. */
+.btn:active {
+  transform: scale(0.98);
 }
 .btn-primary {
   background: var(--color-cobalt-500);
@@ -159,6 +175,10 @@ h4 {
   border: 1px solid var(--color-line-strong);
 }
 .btn-secondary:hover {
+  border-color: var(--color-highlight);
+}
+.btn-secondary:active {
+  background: rgba(255, 255, 255, 0.05);
   border-color: var(--color-highlight);
 }
 .btn-ghost {
@@ -202,11 +222,31 @@ h4 {
 /* §7.3 Länkar */
 .link {
   color: var(--color-cobalt-400);
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), opacity var(--transition-fast);
   cursor: pointer;
 }
 .link:hover {
   text-decoration: underline;
+}
+.link:active {
+  opacity: 0.6;
+}
+
+/* Yt-press: gemensam klass för klickbara ytor med egen form (kort, ikonknappar,
+   flikar, nav-rader, facetter). Fyllningen klipps av elementets border-radius.
+   Håll den subtil (white/5) för premium-känsla — samma överallt. */
+.pressable {
+  transition: background-color var(--transition-fast);
+}
+.pressable:active {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Respektera reducerad rörelse: behåll färg/opacitet-press, hoppa transformen. */
+@media (prefers-reduced-motion: reduce) {
+  .btn:active {
+    transform: none;
+  }
 }
 
 /* §7.4 Badges */

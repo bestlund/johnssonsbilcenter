@@ -46,7 +46,7 @@ export default async function HeroA() {
             <div className="mt-4 flex items-center justify-center gap-3 text-sm">
               <button
                 type="button"
-                className="hero-sok-input text-cobalt-400 transition-colors hover:underline focus-visible:underline"
+                className="hero-sok-input text-cobalt-400 transition-colors hover:underline focus-visible:underline active:opacity-70"
               >
                 Byta bil
               </button>
@@ -55,7 +55,7 @@ export default async function HeroA() {
               </span>
               <Link
                 href="/formedling"
-                className="text-cobalt-400 transition-colors hover:underline focus-visible:underline"
+                className="text-cobalt-400 transition-colors hover:underline focus-visible:underline active:opacity-70"
               >
                 Sälj via förmedling
               </Link>
@@ -64,18 +64,22 @@ export default async function HeroA() {
         </div>
       </div>
 
-      {/* Lagerurval — längst ned, skär vikningen */}
+      {/* Lagerurval — längst ned, skär vikningen. mt på mobil/surfplatta där
+          hero-innehållet är högre än min-h (annars hamnar bilarna hoptryckt mot
+          underlänkarna); på lg sköter min-h avståndet så då mt-0. */}
       {fordon.length > 0 && (
-        <div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 lg:mt-0">
+          {/* På mobil visas bara 2 kort (dölj kort 3+) så öppettider/karta
+              kommer upp snabbare; från sm visas alla. */}
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 [&>*:nth-child(n+3)]:hidden sm:[&>*:nth-child(n+3)]:flex">
             {fordon.map((f) => (
               <Bilkort key={f.uid} fordon={f} />
             ))}
           </div>
 
-          {/* Se alla — under rutnätet, högerställd (alignar sista kortets kant) */}
+          {/* Se alla — full bredd på mobil (tydlig väg vidare), högerställd på sm+ */}
           <div className="mt-6 flex justify-end">
-            <Link href="/bilar" className="btn btn-secondary">
+            <Link href="/bilar" className="btn btn-secondary w-full sm:w-auto">
               Se alla bilar{totalt ? ` (${totalt})` : ""}
             </Link>
           </div>

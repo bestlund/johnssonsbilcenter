@@ -67,7 +67,7 @@ export default function SiteFooter() {
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="small text-mist transition-colors hover:text-linen"
+                      className="small text-mist transition-colors hover:text-linen active:opacity-70"
                     >
                       {l.label}
                     </Link>
@@ -102,7 +102,7 @@ export default function SiteFooter() {
             <span>Mån–fre 10:00–18:00 · Lör 11:00–15:00</span>
             <Link
               href="/integritetspolicy"
-              className="transition-colors hover:text-linen"
+              className="transition-colors hover:text-linen active:opacity-70"
             >
               Integritetspolicy
             </Link>

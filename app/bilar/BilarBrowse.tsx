@@ -157,7 +157,7 @@ export default function BilarBrowse({
                         disabled={inaktiv}
                         aria-pressed={vald}
                         onClick={() => toggleFacett(grupp, varde)}
-                        className={`flex w-full items-center gap-2.5 py-1 text-left ${
+                        className={`pressable flex w-full items-center gap-2.5 rounded-md py-1 text-left ${
                           inaktiv
                             ? "cursor-not-allowed opacity-40"
                             : "cursor-pointer"
@@ -190,7 +190,7 @@ export default function BilarBrowse({
             <button
               type="button"
               onClick={() => setVisaFler((v) => !v)}
-              className="flex w-full cursor-pointer items-center justify-between text-sm font-semibold text-linen"
+              className="pressable flex w-full cursor-pointer items-center justify-between rounded-md text-sm font-semibold text-linen"
             >
               Fler filter
               <span

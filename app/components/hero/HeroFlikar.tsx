@@ -90,7 +90,7 @@ export default function HeroFlikar({
               role="tab"
               aria-selected={aktiv}
               onClick={() => setFlik(id)}
-              className={`${UTAN_RING} -mb-px border-b-2 py-4 text-sm font-semibold transition-colors focus-visible:text-linen ${
+              className={`${UTAN_RING} pressable -mb-px border-b-2 py-4 text-sm font-semibold transition-colors focus-visible:text-linen ${
                 aktiv
                   ? "border-cobalt-500 text-linen"
                   : "border-transparent text-mist hover:text-linen"

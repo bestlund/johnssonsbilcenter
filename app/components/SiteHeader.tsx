@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -76,6 +77,22 @@ function MailIkon({ className = "" }: { className?: string }) {
   );
 }
 
+function MenyIkon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.8" className={className} aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function StangIkon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" strokeWidth="1.8" className={className} aria-hidden="true">
+      <path d="m6 6 12 12M18 6 6 18" stroke="currentColor" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /**
  * §7.9 Navigation. Två lager:
  *  1. Utility-bar (sekundär info: adress → maps, öppettider, e-post) — döljs på
@@ -88,6 +105,27 @@ export default function SiteHeader() {
   const arAktiv = (href: string) =>
     pathname === href || pathname.startsWith(`${href}/`);
 
+  const [meny, setMeny] = useState(false);
+
+  // Stäng vid sidbyte.
+  useEffect(() => {
+    setMeny(false);
+  }, [pathname]);
+
+  // Escape stänger + lås body-scroll medan drawern är öppen.
+  useEffect(() => {
+    if (!meny) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMeny(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [meny]);
+
   return (
     <header>
       {/* 1. Utility-bar — döljs på mobil, ligger i normalt flöde (scrollar bort) */}
@@ -98,7 +136,7 @@ export default function SiteHeader() {
               href={KARTA_LANK}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 transition-colors hover:text-linen"
+              className="inline-flex items-center gap-1.5 transition-colors hover:text-linen active:opacity-70"
             >
               <PinIkon className="h-3.5 w-3.5 text-cobalt-400" />
               {ADRESS}
@@ -120,7 +158,10 @@ export default function SiteHeader() {
 
       {/* 2. Huvudnav — sticky, solid bg, underkant */}
       <div className="sticky top-0 z-40 border-b border-line bg-page">
-        <div className="shell grid grid-cols-[1fr_auto_1fr] items-center gap-8 py-5">
+        {/* Mobil: logga = auto (naturlig bredd, kapas aldrig → ingen stretch),
+            mitten 1fr trycker hamburgaren till höger. lg: 1fr_auto_1fr för
+            centrerad nav. */}
+        <div className="shell grid grid-cols-[auto_1fr_auto] items-center gap-4 py-5 lg:grid-cols-[1fr_auto_1fr] lg:gap-8">
           <Link
             href="/"
             className="justify-self-start"
@@ -132,7 +173,7 @@ export default function SiteHeader() {
               width={1920}
               height={427}
               priority
-              className="h-7 w-auto"
+              className="h-9 w-auto lg:h-10"
             />
           </Link>
 
@@ -147,7 +188,7 @@ export default function SiteHeader() {
                   <Link
                     href={item.href}
                     aria-current={aktiv ? "page" : undefined}
-                    className={`small inline-flex items-center gap-1 transition-colors group-hover:text-linen group-focus-within:text-linen ${
+                    className={`small inline-flex items-center gap-1 transition-colors active:opacity-70 group-hover:text-linen group-focus-within:text-linen ${
                       aktiv ? "text-linen" : "text-mist hover:text-linen"
                     }`}
                   >
@@ -161,7 +202,7 @@ export default function SiteHeader() {
                           key={b.href}
                           href={b.href}
                           aria-current={arAktiv(b.href) ? "page" : undefined}
-                          className={`block rounded-md px-3 py-2 text-sm transition-colors hover:bg-elevated hover:text-linen ${
+                          className={`pressable block rounded-md px-3 py-2 text-sm transition-colors hover:bg-elevated hover:text-linen ${
                             arAktiv(b.href) ? "bg-elevated text-linen" : "text-mist"
                           }`}
                         >
@@ -176,7 +217,7 @@ export default function SiteHeader() {
                   key={item.href}
                   href={item.href}
                   aria-current={aktiv ? "page" : undefined}
-                  className={`small transition-colors ${
+                  className={`small transition-colors active:opacity-70 ${
                     aktiv ? "text-linen" : "text-mist hover:text-linen"
                   }`}
                 >
@@ -186,13 +227,129 @@ export default function SiteHeader() {
             })}
           </nav>
 
-          <a
-            href="tel:+46733029019"
-            className="hidden items-center gap-2 justify-self-end text-sm font-medium text-mist transition-colors hover:text-linen sm:flex"
-          >
-            <TelefonIkon className="h-4 w-4 text-cobalt-400" />
-            073-302 90 19
-          </a>
+          <div className="flex items-center gap-3 justify-self-end">
+            <a
+              href="tel:+46733029019"
+              className="hidden items-center gap-2 text-sm font-medium text-mist transition-colors hover:text-linen active:opacity-70 sm:flex"
+            >
+              <TelefonIkon className="h-4 w-4 text-cobalt-400" />
+              073-302 90 19
+            </a>
+
+            {/* Hamburgare — endast under lg (desktop har full nav) */}
+            <button
+              type="button"
+              onClick={() => setMeny(true)}
+              aria-label="Öppna meny"
+              aria-expanded={meny}
+              className="pressable -mr-2.5 inline-flex h-10 w-10 items-center justify-center rounded-md text-linen transition-colors hover:bg-elevated lg:hidden"
+            >
+              <MenyIkon className="h-6 w-6" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobil drawer — slide-in från vänster, täcker ~86% av skärmen.
+          Alltid monterad så att både öppning och stängning animeras. */}
+      <div
+        className={`fixed inset-0 z-50 lg:hidden ${
+          meny ? "" : "pointer-events-none"
+        }`}
+        aria-hidden={!meny}
+      >
+        {/* Backdrop */}
+        <button
+          type="button"
+          tabIndex={meny ? 0 : -1}
+          aria-label="Stäng meny"
+          onClick={() => setMeny(false)}
+          className={`absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-300 ${
+            meny ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        {/* Panel */}
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Huvudmeny"
+          className={`absolute inset-y-0 left-0 flex w-[86%] max-w-sm flex-col border-r border-line bg-page shadow-2xl transition-transform duration-300 ease-out ${
+            meny ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          {/* Topp: logga + stäng */}
+          <div className="flex items-center justify-between px-6 py-5">
+            <Link href="/" aria-label="Johnsson Bilcenter AB — till startsidan">
+              <Image
+                src="/bilder/logo-johnsson-bilcenter-vit.webp"
+                alt="Johnsson Bilcenter AB"
+                width={1920}
+                height={427}
+                className="h-8 w-auto"
+              />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setMeny(false)}
+              aria-label="Stäng meny"
+              className="pressable -mr-1 inline-flex h-10 w-10 items-center justify-center rounded-md text-mist transition-colors hover:bg-elevated hover:text-linen"
+            >
+              <StangIkon className="h-6 w-6" />
+            </button>
+          </div>
+
+          {/* Tunn linje som bryter av mot menyvalen. Platt lista — undermenyn
+              (Sälj/Förmedla) visas som egna val, ingen rubrik, konsekvent spacing. */}
+          <nav className="flex flex-col border-t border-line px-3 py-4">
+            {NAV.flatMap((item) => (item.barn ? item.barn : [item])).map(
+              (item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={arAktiv(item.href) ? "page" : undefined}
+                  className={`pressable self-start rounded-md px-3 py-3 text-[17px] font-medium transition-colors ${
+                    arAktiv(item.href)
+                      ? "text-linen"
+                      : "text-mist hover:text-linen"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              ),
+            )}
+          </nav>
+
+          {/* Botten — samlad kontakt. Ordning: telefon → öppettider → adress.
+              Den inaktiva öppettidsraden ligger mellan de två tap-målen (ringer /
+              öppnar Maps) som en buffert → färre felträffar på touch. Utility-baren
+              är desktop-only så detta är enda stället infon finns på mobil. */}
+          <div className="mt-auto flex flex-col gap-4 border-t border-line px-6 py-6 text-sm">
+            <a
+              href="tel:+46733029019"
+              className="inline-flex items-center gap-3 text-mist transition-colors hover:text-linen active:opacity-70"
+            >
+              <TelefonIkon className="h-5 w-5 shrink-0 text-cobalt-400" />
+              073-302 90 19
+            </a>
+            <p className="inline-flex items-start gap-3 text-mist">
+              <KlockIkon className="mt-0.5 h-5 w-5 shrink-0 text-cobalt-400" />
+              <span>
+                Mån–fre 10:00–18:00
+                <br />
+                Lör 11:00–15:00
+              </span>
+            </p>
+            <a
+              href={KARTA_LANK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-start gap-3 text-mist transition-colors hover:text-linen active:opacity-70"
+            >
+              <PinIkon className="mt-0.5 h-5 w-5 shrink-0 text-cobalt-400" />
+              <span className="underline underline-offset-2">{ADRESS}</span>
+            </a>
+          </div>
         </div>
       </div>
     </header>

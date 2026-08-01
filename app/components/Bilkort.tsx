@@ -18,7 +18,7 @@ export default function Bilkort({ fordon: f }: { fordon: Fordon }) {
   return (
     <Link
       href={`/objekt#/details/${f.uid}`}
-      className="group flex flex-col overflow-hidden rounded-[6px] border border-line bg-card transition-colors hover:border-highlight"
+      className="group flex flex-col overflow-hidden rounded-[6px] border border-line bg-card transition duration-150 hover:border-highlight active:scale-[0.99] motion-reduce:active:scale-100"
     >
       <div className="relative aspect-[3/2] overflow-hidden bg-elevated">
         {f.vehicleImage && (
