@@ -10,7 +10,8 @@ import {
 } from "@/lib/bilfilter";
 
 export const metadata: Metadata = {
-  title: "Våra bilar — Johnsson Bilcenter",
+  title: "Begagnade bilar till salu i Helsingborg",
+  alternates: { canonical: "/bilar" },
   description:
     "Bläddra bland alla bilar i lager hos Johnsson Bilcenter i Helsingborg. Filtrera på biltyp, drivmedel och växellåda.",
 };

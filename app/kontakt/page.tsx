@@ -4,7 +4,8 @@ import Oppettider from "@/app/components/Oppettider";
 import Kontaktformular from "@/app/components/Kontaktformular";
 
 export const metadata = {
-  title: "Kontakta oss — Johnsson Bilcenter i Helsingborg",
+  title: "Kontakta oss — bilhandlare i Helsingborg",
+  alternates: { canonical: "/kontakt" },
   description:
     "Kontakta oss vid frågor angående din nya bil, våra begagnade bilar, tidsbokning eller annat. Ring oss på 073-302 90 19 eller besök oss på Florettgatan 8 i Helsingborg.",
 };

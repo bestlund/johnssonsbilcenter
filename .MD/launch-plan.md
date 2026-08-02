@@ -53,33 +53,33 @@ Länkar i nav/footer/kort pekar idag på sidor som ger 404.
   juridiskt före launch** (org.nr, kontaktmejl, lagringstider, biträden). Senare skede.
 - [x] Hero-underlänk "Sälj via förmedling" → `/formedling` (var död knapp, nu länk)
 - [ ] **P1** "Byta bil" (hero-underlänk) — 🔒 eget mål? (Jacob kollar med Simon + research)
-- [ ] **P0** `/salj-din-bil` = **"Sälj bil"** (fokus: sälj till oss) — idag stub;
-  riktigt värderingsflöde byggs i M2
+- [x] **P0** `/salj-din-bil` = **"Sälj bil"** (fokus: sälj till oss) — riktigt
+  värderingsformulär byggt (förifylls från hero `?reg=&pris=&tel=`), leads via M2
 - [ ] **P1** Tjänster-copy: bekräfta **riktiga** siffror/villkor med Simon (garantivillkor, finansiering)
-- [ ] **P2** Rensa död `app/components/Hero.tsx` (ej importerad) — 🔒 bekräfta borttag
+- [x] **P2** Rensa död `app/components/Hero.tsx` — borttagen (+ HeroB/C/HeroValjare, `BilarILager`, oanvända bilder/lib-funktioner)
 
 ---
 
 ## Milstolpe 2 — Formulär & leads funkar (funktionalitet)  · **P0**
 Idag skickas inget någonstans. **Beslut (2026-07-28):** ingen CRM nu (framtida
 projekt) — leads ska landa i **Gmail** som strukturerade mejl.
-- [ ] **P0** Lead-leverans utan CRM: en **server-side route/Server Action** (Vercel)
-  tar emot POST, validerar, och skickar **strukturerat mejl till Gmail-inkorgen**.
-  Avsändartjänst: rek. **Resend** (gratis-tier räcker; pålitlig leverans på Vercel).
-  Alt: Gmail SMTP via app-lösenord (skickar *från* Gmail) eller Formspree/Web3Forms.
-  **Test-mottagare (tills Simons adress):** `jv222ur@student.lnu.se`.
-  **Publik kontaktmejl (visas på /kontakt):** `Johnssonsbilcenter@gmail.com` —
-  trolig skarp lead-mottagare.
-- [ ] **P0** Enhetlig mejlmall (systematisk, lättläst, felsäker):
-    - Ämnesprefix per formtyp → Gmail-**filter + etiketter** sorterar automatiskt
-      (t.ex. `[Sälj] ABC12X · 073-…`, `[Kontakt] Namn · ämne`)
-    - Tydlig fält-för-fält-body (regnr, önskat pris, telefon, tid, källsida) —
-      både plaintext + enkel HTML-tabell
-- [ ] **P0** **Constraints/validering på inputfält** *(ny note Jacob)* — klient + server:
-    - **Regnr:** svenskt format (ABC12X / ABC123), versaler, trimma mellanslag, maxLength
-    - **Telefon:** +46/0-hantering, endast siffror, längd-validering (ev. riktnummer-väljare)
-    - Obligatoriska fält, honeypot + enkel rate-limit mot spam, server-side omvalidering
-- [ ] **P1** Bekräftelse-UX (tack-/felläge) + ev. auto-svar till kund
+- [x] **P0** Lead-leverans utan CRM — **Server Action** (`app/actions/leads.ts`,
+  en generisk action med `formtyp`-diskriminator) skickar **strukturerat mejl via
+  Resend** (`lib/leads.ts`, HTTP-API via fetch, inga beroenden). Detaljerad
+  arbetslogg i [`m2-plan.md`](m2-plan.md). ⚠️ Kvar: **RESEND_API_KEY** från Jacob +
+  skarp mottagaradress (env `LEAD_TILL`, test = `jv222ur@student.lnu.se`).
+- [x] **P0** Enhetlig mejlmall — ämnesprefix per typ (`[Kontakt]`/`[Förmedla]`/
+  `[Sälj]`) + plaintext + HTML-tabell, fält-för-fält (`lib/leads.ts`).
+- [x] **P0** **Constraints/validering** — `lib/leadvalidering.ts` (regnr ABC12X/
+  ABC123 + versaler/trim, telefon 0/+46, e-post, miltal), klient (kontrollerade
+  fält + HTML-attribut) + server (auktoritativ omvalidering i action).
+- [x] **P0** **Spam-skydd** — honeypot + min-ifyllnadstid (`dt`) + best-effort
+  in-memory per-IP rate-limit (`lib/spam.ts`). *(Durabel/distribuerad rate-limit
+  via Upstash = P2, bara om spam blir verkligt.)*
+- [x] **P1** Bekräftelse-UX — tack-läge (ersätter formuläret), felläge (`aria-live`
+  + röd fältmarkering), pending ("Skickar…").
+- [ ] **P1** Auto-svar till kund — **uppskjutet till M6** (kräver verifierad
+  Resend-domän för att nå riktiga kunder). Se minnesnotering `auto-svar-uppskjutet`.
 - [x] **Regnr i hero:** "Köpa bil" prioriteras som nu — ingen omprioritering *(beslut)*
 - [ ] **P1** Regnr → fordonsdata-autofyll vid "sälj din bil" — 🔗 beror på
   Nextlease-svar / alternativ källa (Car.info ~2000 kr/mån = dyrt). Utan detta:
@@ -99,20 +99,36 @@ projekt) — leads ska landa i **Gmail** som strukturerade mejl.
 ---
 
 ## Milstolpe 4 — SEO & discoverability  · **P1**
-- [ ] **P1** Per-sida metadata (title/description) + canonical
-- [ ] **P1** OG-bilder + favicon
-- [ ] **P1** `sitemap.xml` + `robots.txt`
-- [ ] **P1** Strukturerad data (schema.org: AutoDealer/LocalBusiness, Vehicle,
-  AggregateRating från Google-betyget)
-- [ ] **P2** AI-SEO: `llms.txt` (ev. `llms-full.txt`)
-- [ ] **P1** 301-redirects från gamla Framer-URL:er (t.ex. `/Våra-objekt` → `/bilar`)
+- [x] **P1** Per-sida metadata + canonical + keyword-tunade titlar (titelmall i
+  layout, `%s | Johnsson Bilcenter`). Sökord förankrade i konkurrent-SERP:ar
+  (Helsingborg primärt, Skåne sekundärt).
+- [x] **P1** OG-bild (1200×630) + favicon + apple-icon (`app/apple-icon.png`).
+- [x] **P1** `sitemap.ts` + `robots.ts` — robots tillåter AI-crawlers, blockerar
+  bara `/nextlease-embed`.
+- [x] **P1** Strukturerad data — `AutoDealer`/`LocalBusiness` + `AggregateRating`
+  (live Google-betyg) + `FAQPage` (`app/components/StruktureradData.tsx`, på
+  startsidan). *(`Vehicle`-schema ej möjligt — bilarna ligger i Nextlease-iframen,
+  ej crawlbara på egen domän; strukturellt tak, se llms.txt-noten.)*
+- [x] **P2** AI-SEO: `llms.txt` (`public/llms.txt`) — ren summering + länkar.
+  ⚠️ Ingen stor AI konsumerar den officiellt ännu; billig framtidsförsäkring.
+- [x] **P1** 301-redirects — `next.config.ts` → `OMDIRIGERINGAR` (308). Alla
+  indexerade gamla sidor (bekräftat via `site:`-sökning) mappade: Kontakta-oss,
+  Om-oss, Boka-ett-möte, Sälj-din-bil, Våra-objekt, Förmedling, Integritets-policy,
+  finansiering→/tjanster/finansiering, garanti→/tjanster/garanti,
+  värdering→/salj-din-bil, hemleverans→/ (ingen motsvarighet). Båda skiftlägen.
+  Hoppade: `varukorg` (gammal kundvagn, ingen ny motsvarighet).
+- [ ] **P1** 🔒 **Vercel-env `NEXT_PUBLIC_SITE_URL`** = `https://www.johnssonsbilcenter.se`
+  vid deploy (annars blir OG/canonical/sitemap fel domän). Central i `lib/site.ts`.
+- [ ] **P2** Google Business Profile — verifiera/putsa (störst lokal hävstång, på Jacob).
 
 ---
 
 ## Milstolpe 5 — UX-polish  · **P1/P2**
 - [x] **P0** Hero låst till A — HeroB, HeroC och `HeroValjare` **raderade**; startsidan statisk igen (ingen `?hero`)
 - [x] **P1** Fix: ojämnt mellanrum/separator i hero-badgen — middot bytt mot centrerad rund prick
-- [ ] **P1** Mobil-nav (hamburger) — saknas
+- [x] **P1** Mobil-nav (hamburger) — slide-in-drawer från vänster (logga, platt
+  menylista, samlad kontakt i botten: telefon → öppettider → adress; scroll-lock,
+  Esc/backdrop stänger, stänger vid sidbyte)
 - [x] **P2** Navbar: adress med ikon (i utility-baren, klickbar → maps)
 - [x] Navbar-dropdown-mönster på plats ("Sälj bil" → Sälj/Förmedla, CSS-only hover/focus)
 - [x] Navbar utbyggd: **utility-bar** (adress→maps, öppettider, e-post; döljs mobil),
@@ -121,6 +137,10 @@ projekt) — leads ska landa i **Gmail** som strukturerade mejl.
   (Jacob vill ha, omfattning ej spikad)
 - [ ] **P2** Utmärkelse-/förtroende-badgar i footern (t.ex. `hero-2.webp`
   "Länets Framgångsbolag 2024", ev. MRF) — Jacob vill lägga dem där
+- [x] **P2** Press-/klick-feedback (mikrointeraktioner) — enhetligt system i
+  `globals.css`: knappar `scale(0.98)`, textlänkar `opacity`, ytor `.pressable`
+  (white/5), kort `scale(0.99)`; tap-highlight av på touch + reduced-motion-guard.
+  Applicerat på header, hero, bilkort, FAQ, footer, /bilar-filter.
 - [ ] **P2** Skeleton loaders + laddningsanimationer (bilkort, widget)
 - [ ] **P2** Chatbot (AI eller statisk) — Jacob: "najs att ha", efter launch
 

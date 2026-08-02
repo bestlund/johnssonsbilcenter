@@ -3,7 +3,8 @@ import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
 
 export const metadata = {
-  title: "Garanti — Johnsson Bilcenter i Helsingborg",
+  title: "Garanti på din begagnade bil",
+  alternates: { canonical: "/tjanster/garanti" },
   description:
     "Teckna garantier som sträcker sig från 6 till 24 månader beroende på bilens miltal och årsmodell. Välj den täckning som passar dina behov.",
 };

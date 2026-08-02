@@ -1,8 +1,10 @@
 import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
+import FormedlingFormular from "@/app/components/FormedlingFormular";
 
 export const metadata = {
-  title: "Förmedla din bil — Johnsson Bilcenter i Helsingborg",
+  title: "Bilförmedling i Helsingborg — förmedla din bil",
+  alternates: { canonical: "/formedling" },
   description:
     "Vill du sälja din bil krångelfritt och ofta få mer betalt än vid privat försäljning? Vi sköter hela förmedlingen åt dig: foto, annonsering, visningar och pappersarbete.",
 };
@@ -83,71 +85,8 @@ export default function Formedling() {
               </p>
             </div>
 
-            {/* Formulär — uppflyttat, före Fördelar */}
-            <div className="card mt-6 p-6 lg:p-8">
-              <h3 className="text-lg font-semibold">
-                Vill du att vi förmedlar din bil?
-              </h3>
-              <p className="mt-2 text-mist">
-                Fyll i formuläret nedan så kontaktar vi dig inom 24 timmar.
-              </p>
-
-              {/* Mockup — backend (leads till Gmail) + validering kopplas i M2 */}
-              <form className="mt-6 grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="regnr" className="field-label">
-                    Registreringsnummer *
-                  </label>
-                  <input
-                    id="regnr"
-                    className="field-input data uppercase"
-                    placeholder="ABC 12X"
-                    maxLength={8}
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="miltal" className="field-label">
-                    Miltal *
-                  </label>
-                  <input
-                    id="miltal"
-                    inputMode="numeric"
-                    className="field-input data"
-                    placeholder="t.ex. 12 500"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="telefon" className="field-label">
-                    Telefon *
-                  </label>
-                  <input
-                    id="telefon"
-                    type="tel"
-                    className="field-input data"
-                    placeholder="073 000 00 00"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="epost" className="field-label">
-                    E-post
-                  </label>
-                  <input
-                    id="epost"
-                    type="email"
-                    className="field-input"
-                    placeholder="Din e-post"
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <button type="submit" className="btn btn-primary w-full">
-                    Skicka
-                  </button>
-                </div>
-              </form>
-            </div>
+            {/* Formulär — uppflyttat, före Fördelar (M2: leads → Gmail) */}
+            <FormedlingFormular />
 
             {/* Fördelar */}
             <h2 className="mt-14">Fördelar med att förmedla hos oss</h2>

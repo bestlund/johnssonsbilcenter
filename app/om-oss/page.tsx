@@ -4,7 +4,8 @@ import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
 
 export const metadata = {
-  title: "Om oss — Johnsson Bilcenter i Helsingborg",
+  title: "Om oss — bilhandlare i Helsingborg",
+  alternates: { canonical: "/om-oss" },
   description:
     "Vi siktar på att bli Sveriges största märkesoberoende bilfirma. Hos oss får privatpersoner bästa möjligheten att köpa, sälja, byta och värdera sina begagnade bilar.",
 };

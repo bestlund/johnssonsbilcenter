@@ -3,7 +3,8 @@ import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
 
 export const metadata = {
-  title: "Finansiering — Johnsson Bilcenter i Helsingborg",
+  title: "Bilfinansiering i Helsingborg",
+  alternates: { canonical: "/tjanster/finansiering" },
   description:
     "Vi hjälper dig hitta ett finansieringsupplägg som passar din ekonomi. I samarbete med flera finansieringspartners får du valmöjligheter: äga direkt, leasa eller betala av i egen takt.",
 };

@@ -1,0 +1,25 @@
+# Johnsson Bilcenter
+
+> Johnsson Bilcenter AB är en märkesoberoende bilhandlare i Helsingborg som köper,
+> säljer, byter och förmedlar begagnade bilar i hela Skåne. Vi erbjuder kostnadsfri
+> värdering, finansiering och garanti.
+
+Företaget drivs av grundaren Simon Johnsson med målet att bli Sveriges största
+märkesoberoende bilhandlare. Alla bilar är genomgångna innan de når kunden.
+
+- Org.nr: 559387-0537
+- Adress: Florettgatan 8, 254 67 Helsingborg
+- Telefon: 073-302 90 19
+- E-post: Johnssonsbilcenter@gmail.com
+- Öppettider: Mån–fre 10:00–18:00, Lör 11:00–15:00
+- Verksamhetsområde: Helsingborg och övriga Skåne
+
+## Sidor
+
+- [Begagnade bilar till salu](https://www.johnssonsbilcenter.se/bilar): Hela vårt lager med filter på märke, pris, bränsle och miltal.
+- [Sälj din bil](https://www.johnssonsbilcenter.se/salj-din-bil): Vi köper din bil. Kostnadsfri värdering, rättvist bud, ofta samma dag.
+- [Bilförmedling](https://www.johnssonsbilcenter.se/formedling): Vi sköter hela försäljningen åt dig — foto, annonsering, visningar och pappersarbete.
+- [Finansiering](https://www.johnssonsbilcenter.se/tjanster/finansiering): Finansieringsupplägg anpassat efter din ekonomi, i samarbete med flera partners.
+- [Garanti](https://www.johnssonsbilcenter.se/tjanster/garanti): Garanti på varje bil vi säljer, 6–24 månader beroende på miltal och årsmodell.
+- [Om oss](https://www.johnssonsbilcenter.se/om-oss): Om företaget och grundaren Simon Johnsson.
+- [Kontakt](https://www.johnssonsbilcenter.se/kontakt): Telefon, e-post, adress, öppettider och kontaktformulär.

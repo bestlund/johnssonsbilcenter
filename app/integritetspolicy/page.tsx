@@ -2,7 +2,8 @@ import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
 
 export const metadata = {
-  title: "Integritetspolicy — Johnsson Bilcenter",
+  title: "Integritetspolicy",
+  alternates: { canonical: "/integritetspolicy" },
   description:
     "Så behandlar Johnsson Bilcenter AB dina personuppgifter när du kontaktar oss eller använder våra formulär.",
 };

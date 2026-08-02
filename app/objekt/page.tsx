@@ -4,7 +4,8 @@ import SiteFooter from "@/app/components/SiteFooter";
 import NextleaseFrame from "./NextleaseFrame";
 
 export const metadata: Metadata = {
-  title: "Objekt — Johnsson Bilcenter",
+  title: "Vårt billager i Helsingborg",
+  alternates: { canonical: "/objekt" },
   description:
     "Detaljvy och köp av Johnsson Bilcenters objekt via Nextlease. Bläddra i vårt urval på /bilar.",
 };

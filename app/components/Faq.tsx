@@ -1,4 +1,4 @@
-const FRAGOR = [
+export const FRAGOR = [
   {
     fraga: "Hur kan jag veta om min bil är redo för försäljning eller inbyte?",
     svar: "Enklast är att höra av dig till oss. Vi tittar på bilen och ger dig en kostnadsfri värdering, helt utan krångel.",
