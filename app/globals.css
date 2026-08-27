@@ -249,6 +249,37 @@ h4 {
   }
 }
 
+/* Skeleton-loaders — subtil shimmer på elevated-yta. Sätt egen border-radius via
+   klass (rounded-*); .skelett sätter ingen så Tailwind-radien vinner. */
+.skelett {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-elevated);
+}
+.skelett::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.06),
+    transparent
+  );
+  animation: skelett-shimmer 1.5s ease-in-out infinite;
+}
+@keyframes skelett-shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skelett::after {
+    display: none;
+  }
+}
+
 /* §7.4 Badges */
 .badge {
   display: inline-flex;

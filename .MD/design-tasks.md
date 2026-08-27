@@ -13,13 +13,18 @@ Från Jacobs notes 2026-08-27. `[ ]` kvar · `[x]` klart · `[~]` pågår.
       → `/Om-oss`→`/om-oss` fångade även korrekta /om-oss). Fixat: rensade
       versaldubbletter, la `/Om-oss` i `proxy.ts` (skiftlägeskänslig). ⚠️ **kräver deploy**
 
-## Batch 2 — footer + till toppen  (nästa)
-- [ ] Footer-redesign: större höjd, design i linje med naven (utility-bar-estetik),
-      alla nödvändiga länkar + info, **org.nr 559387-0537**, klickbar adress → Maps
-- [ ] "Till toppen"-knapp: cirkel + padding + pil upp, till höger, lowkey
+## Batch 2 — footer + till toppen  ✅ (deployad)
+- [x] Footer-redesign: större, nav-estetik (cobalt-ikoner), alla länkar,
+      org.nr 559387-0537, klickbar adress → Maps, tagline
+- [x] "Till toppen"-knapp (`TillToppen.tsx`, global): cirkel + pil upp, nere till
+      höger, tonar in vid scroll, mjuk scroll
 
-## Batch 3 — laddning
-- [ ] Skeleton loaders på allt (bilkort, widget, sidladdning) för segare uppkopplingar
+## Batch 3 — laddning  ✅ (byggd)
+- [x] Skeleton-system: `.skelett` shimmer (globals) + `Skelett.tsx`
+      (Skelett/BilkortSkelett/Grid), reduced-motion-säker
+- [x] `/objekt`: skeleton-rutnät tills Nextlease-iframen laddat
+- [x] `/bilar/loading.tsx`: helsidesskelett (sidebar + toppbar + kort-rutnät)
+- Startsidan är statisk (instant) → inget skelett behövs där
 
 ## Kvar / att förtydliga
 - [ ] Sälj-formulärets inmatningsfält snyggas till (vilka detaljer? spacing/plåt/höjd?)

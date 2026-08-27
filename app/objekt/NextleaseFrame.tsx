@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { BilkortSkelettGrid } from "@/app/components/Skelett";
 
 /**
  * Renderar Nextlease-embedden (/nextlease-embed) i en iframe för att isolera
@@ -11,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 export default function NextleaseFrame() {
   const ref = useRef<HTMLIFrameElement>(null);
   const [src, setSrc] = useState<string>("");
+  const [laddar, setLaddar] = useState(true);
 
   // Spegla parent-hashen till iframens src.
   useEffect(() => {
@@ -24,6 +26,7 @@ export default function NextleaseFrame() {
   useEffect(() => {
     const iframe = ref.current;
     if (!iframe || !src) return;
+    setLaddar(true);
 
     let ro: ResizeObserver | undefined;
     const resize = () => {
@@ -32,6 +35,7 @@ export default function NextleaseFrame() {
     };
     const onLoad = () => {
       resize();
+      setLaddar(false);
       try {
         const doc = iframe.contentWindow?.document;
         if (doc) {
@@ -54,16 +58,26 @@ export default function NextleaseFrame() {
     };
   }, [src]);
 
-  if (!src) return null;
-
   return (
-    <iframe
-      ref={ref}
-      src={src}
-      title="Nextlease – objekt"
-      scrolling="no"
-      className="w-full"
-      style={{ border: 0, minHeight: 600 }}
-    />
+    <div className="relative min-h-[600px]">
+      {src && (
+        <iframe
+          ref={ref}
+          src={src}
+          title="Nextlease – objekt"
+          scrolling="no"
+          className="w-full transition-opacity duration-300"
+          style={{ border: 0, minHeight: 600, opacity: laddar ? 0 : 1 }}
+        />
+      )}
+      {laddar && (
+        <div className="absolute inset-0" aria-hidden="true">
+          <BilkortSkelettGrid
+            antal={6}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          />
+        </div>
+      )}
+    </div>
   );
 }
