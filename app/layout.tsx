@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import { SITE_URL, FORETAG } from "@/lib/site";
+import TillToppen from "@/app/components/TillToppen";
 import "./globals.css";
 
 // §2 Typografi — Hanken Grotesk för rubriker/UI/brödtext, JetBrains Mono för data.
@@ -59,7 +60,10 @@ export default function RootLayout({
       lang="sv"
       className={`${hanken.variable} ${jetbrains.variable} h-full antialiased`}
     >
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        {children}
+        <TillToppen />
+      </body>
     </html>
   );
 }
