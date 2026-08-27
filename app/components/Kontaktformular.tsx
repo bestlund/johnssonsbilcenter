@@ -148,7 +148,7 @@ export default function Kontaktformular() {
         )}
 
         <div className="sm:col-span-2">
-          <SkickaKnapp pending={pending}>Skicka →</SkickaKnapp>
+          <SkickaKnapp pending={pending}>Skicka</SkickaKnapp>
           <p className="mt-3 text-center text-xs text-fog">
             Vi delar inte din information med någon.
           </p>

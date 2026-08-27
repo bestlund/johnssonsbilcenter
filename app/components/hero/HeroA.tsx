@@ -42,17 +42,8 @@ export default async function HeroA() {
           <div className="lg:min-h-[460px]">
             <HeroFlikar totalt={totalt} sokBilar={sokBilar} />
 
-            {/* Subtila sekundärtjänster. Destinationer ej bestämda än. */}
-            <div className="mt-4 flex items-center justify-center gap-3 text-sm">
-              <button
-                type="button"
-                className="hero-sok-input text-cobalt-400 transition-colors hover:underline focus-visible:underline active:opacity-70"
-              >
-                Byta bil
-              </button>
-              <span className="text-fog" aria-hidden="true">
-                ·
-              </span>
+            {/* Sekundär väg: förmedling. */}
+            <div className="mt-4 flex items-center justify-center text-sm">
               <Link
                 href="/formedling"
                 className="text-cobalt-400 transition-colors hover:underline focus-visible:underline active:opacity-70"

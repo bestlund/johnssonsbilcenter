@@ -97,10 +97,8 @@ export const byggVal = (totalt: number): HeroVal[] => [
 // återanvändning där. Se STATE.md/öppna punkter.
 
 export const RUBRIK = (
-  <>
-    Gör ett <em>smart</em> bilköp med Johnsson Bilcenter
-  </>
+  <>Gör ett smart bilköp med Johnsson Bilcenter</>
 );
 
 export const BRODTEXT =
-  "Vi säljer, köper, byter och förmedlar begagnade bilar, med varudeklaration på varje affär.";
+  "Välkommen till en bilaffär som känns personlig, från första hej till nycklarna i handen. Vi köper, säljer, byter och förmedlar begagnade bilar med omtanke och trygghet i varje steg.";

@@ -195,14 +195,14 @@ export default function SiteHeader() {
                     {item.label}
                     <ChevronIkon className="h-3 w-3 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
                   </Link>
-                  <div className="invisible absolute left-1/2 top-full z-40 -translate-x-1/2 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                    <div className="min-w-[210px] rounded-lg border border-line-strong bg-card p-1.5 shadow-lg">
+                  <div className="invisible absolute left-0 top-full z-40 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <div className="min-w-[220px] rounded-lg border border-line-strong bg-card p-2 shadow-lg">
                       {item.barn.map((b) => (
                         <Link
                           key={b.href}
                           href={b.href}
                           aria-current={arAktiv(b.href) ? "page" : undefined}
-                          className={`pressable block rounded-md px-3 py-2 text-sm transition-colors hover:bg-elevated hover:text-linen ${
+                          className={`pressable block whitespace-nowrap rounded-md px-4 py-2.5 text-sm transition-colors hover:bg-elevated hover:text-linen ${
                             arAktiv(b.href) ? "bg-elevated text-linen" : "text-mist"
                           }`}
                         >

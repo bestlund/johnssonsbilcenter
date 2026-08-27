@@ -26,8 +26,8 @@ export default async function Home() {
         <Oppettider />
         <Omdomen />
         <Grundare />
-        <Tjanster />
         <Faq />
+        <Tjanster />
         <Kontaktformular />
       </main>
       <SiteFooter />
