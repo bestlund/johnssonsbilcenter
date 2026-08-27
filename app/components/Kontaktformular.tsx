@@ -3,6 +3,7 @@
 import { useActionState, useRef, useState } from "react";
 import { skickaLeadAction } from "@/app/actions/leads";
 import { TOM_LEADSTATE } from "@/lib/leadstate";
+import { formateraTelefon } from "@/lib/leadvalidering";
 import Faltfel from "./form/Faltfel";
 import SkickaKnapp from "./form/SkickaKnapp";
 
@@ -25,8 +26,13 @@ export default function Kontaktformular() {
     arende: "",
   });
   const [samtycke, setSamtycke] = useState(false);
-  const upp = (falt: keyof typeof v) => (e: { target: { value: string } }) =>
-    setV((f) => ({ ...f, [falt]: e.target.value }));
+  const upp =
+    (falt: keyof typeof v, tvatta?: (s: string) => string) =>
+    (e: { target: { value: string } }) =>
+      setV((f) => ({
+        ...f,
+        [falt]: tvatta ? tvatta(e.target.value) : e.target.value,
+      }));
 
   if (state.ok) {
     return (
@@ -81,7 +87,7 @@ export default function Kontaktformular() {
             name="telefon"
             type="tel"
             value={v.telefon}
-            onChange={upp("telefon")}
+            onChange={upp("telefon", formateraTelefon)}
             className="field-input data"
             placeholder="073-302 90 19"
             required

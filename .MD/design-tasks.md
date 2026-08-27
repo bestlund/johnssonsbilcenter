@@ -26,11 +26,24 @@ Från Jacobs notes 2026-08-27. `[ ]` kvar · `[x]` klart · `[~]` pågår.
 - [x] `/bilar/loading.tsx`: helsidesskelett (sidebar + toppbar + kort-rutnät)
 - Startsidan är statisk (instant) → inget skelett behövs där
 
+## Batch 4 — formulär: formatering + bilder + meddelande  ✅ (byggd)
+- [x] Auto-formatering av inmatningsfält (live + i mejlet): regnr `ABC 12X`,
+      pris/miltal `185 000`, telefon `070-199 06 00` (`lib/leadvalidering.ts`)
+- [x] Bilduppladdning i sälj-formuläret — **mejlbilagor** (GDPR-val, ej Blob):
+      klient komprimerar + orienterar + strippar EXIF (canvas), server re-processar
+      med sharp (auktoritativ EXIF-strip + resize) → bifogas lead-mejlet.
+      `bodySizeLimit: 6mb`, max 6 bilder, felsäkert.
+- [x] Valfritt meddelande-fält (sälj)
+
+## Batch 5 — llms.html  ✅ (byggd)
+- [x] AI/sökmotor-faktasida à la Riddermark: `app/llms/page.tsx` med live-data
+      (Google-betyg + antal bilar), servad på `/llms.html` via rewrite, länkad
+      "llms" i footern, med i sitemap.
+
 ## Kvar / att förtydliga
-- [ ] Sälj-formulärets inmatningsfält snyggas till (vilka detaljer? spacing/plåt/höjd?)
-- [ ] Bilduppladdning i formuläret + valfritt meddelande-fält
-      → beslut: **A) mejlbilagor** (enkelt, ingen lagring) eller **B) Vercel Blob** (rek. för bilfoton)
-- [ ] "LLMs.html" — vad menas? (vi har `llms.txt`)
+- [ ] Ev. bilder även i förmedlings-formuläret (bara sälj nu)
 
 ## Noteringar
-- Ingen databas behövs. Bilder = fillagring (Blob), inte DB. Valfritt meddelande = bara ett fält i mejlet.
+- **GDPR-beslut:** bilder = mejlbilagor, INGEN molnlagring (Blob). EXIF/GPS strippas
+  klient + server. Data finns bara i Simons inkorg (dataminimering, ett färre biträde).
+- Integritetspolicyn bör täcka bild-/uppgiftsinsamling + lagringstid (juridisk granskning före launch).

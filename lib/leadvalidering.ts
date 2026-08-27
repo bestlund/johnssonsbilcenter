@@ -67,3 +67,34 @@ export function valideraMiltal(v: string): string | null {
   if (Number(m) > 100000) return "Ange miltal i mil (inte km).";
   return null;
 }
+
+/* ------------------------------------------------------------------ *
+ * Formatering för visning (live i inputfält + i lead-mejlet). Gör värdena
+ * lättlästa så både kund och Simon ser tydligt vad som står. Idempotenta —
+ * kan köras på redan formaterad text.
+ * ------------------------------------------------------------------ */
+
+/** Regnr → versaler + mellanslag efter 3 tecken: "ABC12X" → "ABC 12X". */
+export function formateraRegnr(v: string): string {
+  const r = saneraRegnr(v).slice(0, 6);
+  return r.length > 3 ? `${r.slice(0, 3)} ${r.slice(3)}` : r;
+}
+
+/** Heltal med tusentalsmellanslag: "185000" → "185 000". */
+export function formateraTal(v: string): string {
+  const d = v.replace(/\D/g, "");
+  if (!d) return "";
+  return d.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+/** Svenskt telefonnummer, grupperat: "0701990600" → "070-199 06 00". */
+export function formateraTelefon(v: string): string {
+  const plus = v.trim().startsWith("+");
+  let d = v.replace(/\D/g, "");
+  if (plus && d.startsWith("46")) d = "0" + d.slice(2); // +46 → 0 för visning
+  d = d.slice(0, 10);
+  if (d.length <= 3) return d;
+  if (d.length <= 6) return `${d.slice(0, 3)}-${d.slice(3)}`;
+  if (d.length <= 8) return `${d.slice(0, 3)}-${d.slice(3, 6)} ${d.slice(6)}`;
+  return `${d.slice(0, 3)}-${d.slice(3, 6)} ${d.slice(6, 8)} ${d.slice(8)}`;
+}

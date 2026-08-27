@@ -26,6 +26,13 @@ const OMDIRIGERINGAR: { from: string; to: string }[] = [
 ];
 
 const nextConfig: NextConfig = {
+  // Sälj-formuläret bifogar bilder (komprimeras klient-side först). Höj gränsen
+  // från default 1MB så några komprimerade foton får plats.
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "6mb",
+    },
+  },
   images: {
     remotePatterns: [
       // Fordonsbilder från Nextlease CDN. Övriga bilder ligger lokalt
@@ -41,6 +48,11 @@ const nextConfig: NextConfig = {
       destination: to,
       permanent: true,
     }));
+  },
+  async rewrites() {
+    // AI-/sökmotor-faktasida servad på /llms.html (matchar branschpraxis) men
+    // implementerad som /llms-routen.
+    return [{ source: "/llms.html", destination: "/llms" }];
   },
 };
 

@@ -1,7 +1,8 @@
 "use server";
 
 import { headers } from "next/headers";
-import { skickaLead, type Lead } from "@/lib/leads";
+import { skickaLead, type Lead, type Bilaga } from "@/lib/leads";
+import { processaBilder } from "@/lib/bilder";
 import type { LeadState } from "@/lib/leadstate";
 import { forSnabb, rateLimitad } from "@/lib/spam";
 import {
@@ -96,6 +97,7 @@ export async function skickaLeadAction(
     const telefon = sanera(g("telefon"));
     const namn = sanera(g("namn"));
     const epost = g("epost").trim();
+    const meddelande = g("meddelande").trim();
 
     let e: string | null;
     if ((e = valideraRegnr(regnr))) fel.regnr = e;
@@ -112,6 +114,7 @@ export async function skickaLeadAction(
       ...(onskatPris ? { onskatPris } : {}),
       ...(namn ? { namn } : {}),
       ...(epost ? { epost } : {}),
+      ...(meddelande ? { meddelande } : {}),
     };
   } else {
     return { ok: false, fel: {}, meddelande: FEL_ALLMANT };
@@ -127,8 +130,22 @@ export async function skickaLeadAction(
     return { ok: false, fel: {}, meddelande: FEL_RATE };
   }
 
+  // Bilder (endast sälj) → mejlbilagor. Best-effort: en misslyckad bild eller
+  // hela processningen får aldrig fälla leaden.
+  let bilagor: Bilaga[] = [];
+  if (lead.typ === "salj") {
+    try {
+      const filer = formData
+        .getAll("bilder")
+        .filter((x): x is File => x instanceof File);
+      bilagor = await processaBilder(filer);
+    } catch (err) {
+      console.error("Bildprocessning misslyckades:", err);
+    }
+  }
+
   try {
-    await skickaLead(lead);
+    await skickaLead(lead, bilagor);
   } catch (err) {
     console.error("Lead misslyckades:", err);
     return { ok: false, fel: {}, meddelande: FEL_ALLMANT };

@@ -50,4 +50,5 @@ export const SIDOR = [
   { path: "/om-oss", priority: 0.6 },
   { path: "/kontakt", priority: 0.7 },
   { path: "/integritetspolicy", priority: 0.3 },
+  { path: "/llms.html", priority: 0.3 },
 ];

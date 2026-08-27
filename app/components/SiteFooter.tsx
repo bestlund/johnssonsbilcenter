@@ -174,12 +174,20 @@ export default function SiteFooter() {
           <p>
             © {new Date().getFullYear()} {FORETAG.namn} · Org.nr {FORETAG.orgnr}
           </p>
-          <Link
-            href="/integritetspolicy"
-            className="transition-colors hover:text-linen active:opacity-70"
-          >
-            Integritetspolicy
-          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href="/integritetspolicy"
+              className="transition-colors hover:text-linen active:opacity-70"
+            >
+              Integritetspolicy
+            </Link>
+            <a
+              href="/llms.html"
+              className="transition-colors hover:text-linen active:opacity-70"
+            >
+              llms
+            </a>
+          </div>
         </div>
       </div>
     </footer>

@@ -3,9 +3,43 @@
 import { useActionState, useRef, useState } from "react";
 import { skickaLeadAction } from "@/app/actions/leads";
 import { TOM_LEADSTATE } from "@/lib/leadstate";
-import { saneraRegnr } from "@/lib/leadvalidering";
+import {
+  formateraRegnr,
+  formateraTal,
+  formateraTelefon,
+} from "@/lib/leadvalidering";
 import Faltfel from "./form/Faltfel";
 import SkickaKnapp from "./form/SkickaKnapp";
+
+/**
+ * Komprimerar + orienterar en bild klient-side innan upload: applicerar
+ * EXIF-orientering, krymper till max 1600px och re-encodar som JPEG via canvas
+ * (vilket också strippar all metadata/GPS). Håller uppladdningen liten nog för
+ * Server Actions body-gräns. Faller tillbaka på originalet om något strular.
+ */
+async function komprimera(file: File): Promise<Blob> {
+  try {
+    const bild = await createImageBitmap(file, {
+      imageOrientation: "from-image",
+    });
+    const max = 1600;
+    const skala = Math.min(1, max / Math.max(bild.width, bild.height));
+    const w = Math.round(bild.width * skala);
+    const h = Math.round(bild.height * skala);
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return file;
+    ctx.drawImage(bild, 0, 0, w, h);
+    const blob = await new Promise<Blob | null>((res) =>
+      canvas.toBlob(res, "image/jpeg", 0.8),
+    );
+    return blob ?? file;
+  } catch {
+    return file;
+  }
+}
 
 /**
  * Sälj din bil → strukturerat mejl via Server Action (M2). Förifylls från
@@ -21,19 +55,69 @@ export default function SaljFormular({
     TOM_LEADSTATE,
   );
   const t0 = useRef(Date.now());
-  const skicka = (fd: FormData) => {
+  const [v, setV] = useState({
+    regnr: formateraRegnr(start.regnr),
+    miltal: "",
+    pris: formateraTal(start.pris),
+    telefon: formateraTelefon(start.telefon),
+    namn: "",
+    epost: "",
+    meddelande: "",
+  });
+  const [samtycke, setSamtycke] = useState(false);
+
+  // Bilder (valfritt) → bifogas mejlet. Hanteras i state för förhandsvisning +
+  // borttagning; filerna läggs på FormData i skicka().
+  const MAX_BILDER = 6;
+  const MAX_STORLEK = 12 * 1024 * 1024; // 12 MB
+  const [bilder, setBilder] = useState<{ file: File; url: string }[]>([]);
+  const [bildFel, setBildFel] = useState("");
+  const [komprimerar, setKomprimerar] = useState(false);
+  const filRef = useRef<HTMLInputElement>(null);
+
+  function laggTillBilder(valda: FileList | null) {
+    if (!valda) return;
+    setBildFel("");
+    const nya: { file: File; url: string }[] = [];
+    for (const f of Array.from(valda)) {
+      if (!f.type.startsWith("image/")) {
+        setBildFel("Bara bilder kan laddas upp.");
+        continue;
+      }
+      if (f.size > MAX_STORLEK) {
+        setBildFel("Någon bild är för stor (max 12 MB).");
+        continue;
+      }
+      nya.push({ file: f, url: URL.createObjectURL(f) });
+    }
+    setBilder((b) => {
+      if (b.length + nya.length > MAX_BILDER)
+        setBildFel(`Du kan bifoga max ${MAX_BILDER} bilder.`);
+      return [...b, ...nya].slice(0, MAX_BILDER);
+    });
+    if (filRef.current) filRef.current.value = ""; // tillåt samma fil igen
+  }
+
+  function taBort(i: number) {
+    setBilder((b) => {
+      URL.revokeObjectURL(b[i]?.url);
+      return b.filter((_, n) => n !== i);
+    });
+  }
+
+  const skicka = async (fd: FormData) => {
+    setKomprimerar(true);
+    try {
+      for (let i = 0; i < bilder.length; i++) {
+        const blob = await komprimera(bilder[i].file);
+        fd.append("bilder", blob, `bild-${i + 1}.jpg`);
+      }
+    } finally {
+      setKomprimerar(false);
+    }
     fd.set("dt", String(Date.now() - t0.current));
     return action(fd);
   };
-  const [v, setV] = useState({
-    regnr: saneraRegnr(start.regnr),
-    miltal: "",
-    pris: start.pris.replace(/[^\d\s]/g, ""),
-    telefon: start.telefon,
-    namn: "",
-    epost: "",
-  });
-  const [samtycke, setSamtycke] = useState(false);
   const upp =
     (falt: keyof typeof v, tvatta?: (s: string) => string) =>
     (e: { target: { value: string } }) =>
@@ -77,7 +161,7 @@ export default function SaljFormular({
             id="s-regnr"
             name="regnr"
             value={v.regnr}
-            onChange={upp("regnr", saneraRegnr)}
+            onChange={upp("regnr", formateraRegnr)}
             className="field-input data uppercase"
             placeholder="ABC 12X"
             maxLength={7}
@@ -96,7 +180,7 @@ export default function SaljFormular({
             name="miltal"
             inputMode="numeric"
             value={v.miltal}
-            onChange={upp("miltal", (s) => s.replace(/[^\d\s]/g, ""))}
+            onChange={upp("miltal", formateraTal)}
             className="field-input data"
             placeholder="t.ex. 12 500"
             aria-invalid={!!state.fel.miltal}
@@ -113,7 +197,7 @@ export default function SaljFormular({
             name="pris"
             inputMode="numeric"
             value={v.pris}
-            onChange={upp("pris", (s) => s.replace(/[^\d\s]/g, ""))}
+            onChange={upp("pris", formateraTal)}
             className="field-input data"
             placeholder="185 000"
           />
@@ -128,7 +212,7 @@ export default function SaljFormular({
             name="telefon"
             type="tel"
             value={v.telefon}
-            onChange={upp("telefon")}
+            onChange={upp("telefon", formateraTelefon)}
             className="field-input data"
             placeholder="073-302 90 19"
             required
@@ -169,6 +253,81 @@ export default function SaljFormular({
         </div>
 
         <div className="sm:col-span-2">
+          <label htmlFor="s-meddelande" className="field-label">
+            Meddelande <span className="text-fog">· valfritt</span>
+          </label>
+          <textarea
+            id="s-meddelande"
+            name="meddelande"
+            rows={3}
+            value={v.meddelande}
+            onChange={upp("meddelande")}
+            className="field-input"
+            placeholder="Berätta gärna mer — skick, utrustning, servicehistorik…"
+          />
+        </div>
+
+        {/* Bilder — valfritt, bifogas mejlet (EXIF strippas server-side) */}
+        <div className="sm:col-span-2">
+          <span className="field-label">
+            Bilder på bilen <span className="text-fog">· valfritt</span>
+          </span>
+          <input
+            ref={filRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(e) => laggTillBilder(e.target.files)}
+            className="hidden"
+          />
+
+          {bilder.length > 0 && (
+            <div className="mb-3 flex flex-wrap gap-2">
+              {bilder.map((b, i) => (
+                <div
+                  key={b.url}
+                  className="relative h-20 w-20 overflow-hidden rounded-md border border-line-strong bg-elevated"
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={b.url}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => taBort(i)}
+                    aria-label="Ta bort bild"
+                    className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-sm leading-none text-white transition-colors hover:bg-black active:scale-95"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {bilder.length < MAX_BILDER && (
+            <button
+              type="button"
+              onClick={() => filRef.current?.click()}
+              className="btn btn-secondary"
+            >
+              Lägg till bilder
+            </button>
+          )}
+          <p className="mt-2 text-xs text-fog">
+            Upp till {MAX_BILDER} bilder. Hjälper oss ge en snabbare och mer
+            träffsäker värdering.
+          </p>
+          {bildFel && (
+            <p role="alert" className="mt-1 text-xs text-danger">
+              {bildFel}
+            </p>
+          )}
+        </div>
+
+        <div className="sm:col-span-2">
           <label className="flex items-start gap-3 text-xs text-mist">
             <input
               type="checkbox"
@@ -190,7 +349,9 @@ export default function SaljFormular({
         )}
 
         <div className="sm:col-span-2">
-          <SkickaKnapp pending={pending}>Få en värdering</SkickaKnapp>
+          <SkickaKnapp pending={pending || komprimerar}>
+            Få en värdering
+          </SkickaKnapp>
           <p className="mt-3 text-center text-xs text-fog">
             Vi återkommer samma dag · ingen förpliktelse
           </p>

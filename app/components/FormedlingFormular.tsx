@@ -3,7 +3,11 @@
 import { useActionState, useRef, useState } from "react";
 import { skickaLeadAction } from "@/app/actions/leads";
 import { TOM_LEADSTATE } from "@/lib/leadstate";
-import { saneraRegnr } from "@/lib/leadvalidering";
+import {
+  formateraRegnr,
+  formateraTal,
+  formateraTelefon,
+} from "@/lib/leadvalidering";
 import Faltfel from "./form/Faltfel";
 import SkickaKnapp from "./form/SkickaKnapp";
 
@@ -68,7 +72,7 @@ export default function FormedlingFormular() {
             id="f-regnr"
             name="regnr"
             value={v.regnr}
-            onChange={upp("regnr", saneraRegnr)}
+            onChange={upp("regnr", formateraRegnr)}
             className="field-input data uppercase"
             placeholder="ABC 12X"
             maxLength={7}
@@ -87,7 +91,7 @@ export default function FormedlingFormular() {
             name="miltal"
             inputMode="numeric"
             value={v.miltal}
-            onChange={upp("miltal", (s) => s.replace(/[^\d\s]/g, ""))}
+            onChange={upp("miltal", formateraTal)}
             className="field-input data"
             placeholder="t.ex. 12 500"
             required
@@ -105,7 +109,7 @@ export default function FormedlingFormular() {
             name="telefon"
             type="tel"
             value={v.telefon}
-            onChange={upp("telefon")}
+            onChange={upp("telefon", formateraTelefon)}
             className="field-input data"
             placeholder="073-302 90 19"
             required

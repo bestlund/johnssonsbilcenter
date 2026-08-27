@@ -7,6 +7,12 @@
  * Gmail-filter kan sortera automatiskt till etiketter.
  */
 
+import {
+  formateraRegnr,
+  formateraTal,
+  formateraTelefon,
+} from "./leadvalidering";
+
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
 export type Lead =
@@ -32,9 +38,13 @@ export type Lead =
       telefon: string;
       namn?: string;
       epost?: string;
+      meddelande?: string;
     };
 
 type Rad = [etikett: string, varde: string];
+
+/** Mejlbilaga (bild) — base64-innehåll, som Resends attachments-format. */
+export type Bilaga = { filename: string; content: string };
 
 function escapeHtml(s: string): string {
   return s
@@ -48,11 +58,11 @@ function escapeHtml(s: string): string {
 function byggAmne(lead: Lead): string {
   switch (lead.typ) {
     case "kontakt":
-      return `[Kontakt] ${lead.fornamn} · ${lead.telefon}`;
+      return `[Kontakt] ${lead.fornamn} · ${formateraTelefon(lead.telefon)}`;
     case "formedling":
-      return `[Förmedla] ${lead.regnr} · ${lead.telefon}`;
+      return `[Förmedla] ${formateraRegnr(lead.regnr)} · ${formateraTelefon(lead.telefon)}`;
     case "salj":
-      return `[Sälj] ${lead.regnr} · ${lead.telefon}`;
+      return `[Sälj] ${formateraRegnr(lead.regnr)} · ${formateraTelefon(lead.telefon)}`;
   }
 }
 
@@ -62,27 +72,32 @@ function byggRader(lead: Lead): Rad[] {
     case "kontakt":
       return [
         ["Förnamn", lead.fornamn],
-        ["Telefon", lead.telefon],
+        ["Telefon", formateraTelefon(lead.telefon)],
         ["E-post", lead.epost],
         ["Ärende", lead.arende],
       ];
     case "formedling":
       return [
-        ["Registreringsnummer", lead.regnr],
-        ["Miltal", `${lead.miltal} mil`],
-        ["Telefon", lead.telefon],
+        ["Registreringsnummer", formateraRegnr(lead.regnr)],
+        ["Miltal", `${formateraTal(lead.miltal)} mil`],
+        ["Telefon", formateraTelefon(lead.telefon)],
         ...(lead.epost ? ([["E-post", lead.epost]] as Rad[]) : []),
       ];
     case "salj":
       return [
-        ["Registreringsnummer", lead.regnr],
-        ...(lead.miltal ? ([["Miltal", `${lead.miltal} mil`]] as Rad[]) : []),
-        ...(lead.onskatPris
-          ? ([["Önskat pris", `${lead.onskatPris} kr`]] as Rad[])
+        ["Registreringsnummer", formateraRegnr(lead.regnr)],
+        ...(lead.miltal
+          ? ([["Miltal", `${formateraTal(lead.miltal)} mil`]] as Rad[])
           : []),
-        ["Telefon", lead.telefon],
+        ...(lead.onskatPris
+          ? ([["Önskat pris", `${formateraTal(lead.onskatPris)} kr`]] as Rad[])
+          : []),
+        ["Telefon", formateraTelefon(lead.telefon)],
         ...(lead.namn ? ([["Namn", lead.namn]] as Rad[]) : []),
         ...(lead.epost ? ([["E-post", lead.epost]] as Rad[]) : []),
+        ...(lead.meddelande
+          ? ([["Meddelande", lead.meddelande]] as Rad[])
+          : []),
       ];
   }
 }
@@ -137,7 +152,10 @@ function kundEpost(lead: Lead): string | undefined {
  * Skickar leaden som mejl via Resend. Kastar vid saknad konfiguration eller
  * icke-2xx-svar så att Server Action kan visa ett felläge.
  */
-export async function skickaLead(lead: Lead): Promise<void> {
+export async function skickaLead(
+  lead: Lead,
+  bilagor: Bilaga[] = [],
+): Promise<void> {
   const key = process.env.RESEND_API_KEY;
   const till = process.env.LEAD_TILL;
   const fran = process.env.LEAD_FRAN;
@@ -163,6 +181,7 @@ export async function skickaLead(lead: Lead): Promise<void> {
       text,
       html,
       ...(replyTo ? { reply_to: replyTo } : {}),
+      ...(bilagor.length ? { attachments: bilagor } : {}),
     }),
   });
 
