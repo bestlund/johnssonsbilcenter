@@ -5,6 +5,12 @@ import { useRef, useState } from "react";
 const MAX_BILDER = 6;
 const MAX_MB = 12;
 const MAX_STORLEK = MAX_MB * 1024 * 1024;
+// Vercel kapar en Server Action-request vid 4,5 MB (plattformsgräns, går ej att
+// höja). Vi budgeterar bilderna till 4 MB efter komprimering och lämnar resten
+// åt textfält + multipart-overhead. Vakt nedan fångar det snällt om något ändå
+// slinker över (t.ex. om komprimeringen faller tillbaka på originalet).
+const MAX_TOTAL_MB = 4;
+const MAX_TOTAL = MAX_TOTAL_MB * 1024 * 1024;
 
 /**
  * Komprimerar + orienterar en bild klient-side före upload: applicerar
@@ -17,7 +23,7 @@ async function komprimera(file: File): Promise<Blob> {
     const bild = await createImageBitmap(file, {
       imageOrientation: "from-image",
     });
-    const max = 1600;
+    const max = 1400;
     const skala = Math.min(1, max / Math.max(bild.width, bild.height));
     const w = Math.round(bild.width * skala);
     const h = Math.round(bild.height * skala);
@@ -28,7 +34,7 @@ async function komprimera(file: File): Promise<Blob> {
     if (!ctx) return file;
     ctx.drawImage(bild, 0, 0, w, h);
     const blob = await new Promise<Blob | null>((res) =>
-      canvas.toBlob(res, "image/jpeg", 0.8),
+      canvas.toBlob(res, "image/jpeg", 0.72),
     );
     return blob ?? file;
   } catch {
@@ -105,15 +111,33 @@ export function useBildvaljare() {
     });
   }
 
-  /** Komprimerar och lägger alla valda bilder på FormData (fält "bilder"). */
-  async function bifogaTill(fd: FormData) {
-    if (!bilder.length) return;
+  /**
+   * Komprimerar och lägger alla valda bilder på FormData (fält "bilder").
+   * Returnerar `false` om bilderna tillsammans överskrider budgeten (då sätts
+   * ett fel och inget bifogas) så formuläret kan avbryta i stället för att
+   * skicka en request Vercel ändå avvisar. `true` = klart att skicka.
+   */
+  async function bifogaTill(fd: FormData): Promise<boolean> {
+    if (!bilder.length) return true;
     setKomprimerar(true);
     try {
-      for (let i = 0; i < bilder.length; i++) {
-        const blob = await komprimera(bilder[i].file);
-        fd.append("bilder", blob, `bild-${i + 1}.jpg`);
+      const blobar: Blob[] = [];
+      let total = 0;
+      for (const b of bilder) {
+        const blob = await komprimera(b.file);
+        blobar.push(blob);
+        total += blob.size;
       }
+      if (total > MAX_TOTAL) {
+        setBildFel(
+          `Bilderna är för stora tillsammans (max ${MAX_TOTAL_MB} MB efter komprimering). Ta bort någon eller välj färre.`,
+        );
+        return false;
+      }
+      blobar.forEach((blob, i) =>
+        fd.append("bilder", blob, `bild-${i + 1}.jpg`),
+      );
+      return true;
     } finally {
       setKomprimerar(false);
     }

@@ -21,7 +21,8 @@ export default function FormedlingFormular() {
   const start = useRef(Date.now());
   const bild = useBildvaljare();
   const skicka = async (fd: FormData) => {
-    await bild.bifogaTill(fd); // komprimerar + strippar EXIF + bifogar
+    // komprimerar + strippar EXIF + bifogar; false = för stora, felet visas i UI
+    if (!(await bild.bifogaTill(fd))) return;
     fd.set("dt", String(Date.now() - start.current));
     return action(fd);
   };

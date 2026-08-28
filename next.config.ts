@@ -26,11 +26,13 @@ const OMDIRIGERINGAR: { from: string; to: string }[] = [
 ];
 
 const nextConfig: NextConfig = {
-  // Sälj-formuläret bifogar bilder (komprimeras klient-side först). Höj gränsen
-  // från default 1MB så några komprimerade foton får plats.
+  // Lead-formulären bifogar bilder (komprimeras klient-side först). Höj gränsen
+  // från default 1MB. OBS: Vercel kapar en Server Action-request vid 4,5 MB på
+  // plattformsnivå oavsett detta värde — så vi budgeterar bilderna under det
+  // klient-side (se Bildvaljare) och håller gränsen här i linje med verkligheten.
   experimental: {
     serverActions: {
-      bodySizeLimit: "6mb",
+      bodySizeLimit: "4.5mb",
     },
   },
   images: {
