@@ -29,6 +29,7 @@ export type Lead =
       miltal: string;
       telefon: string;
       epost?: string;
+      meddelande?: string;
     }
   | {
       typ: "salj";
@@ -82,6 +83,9 @@ function byggRader(lead: Lead): Rad[] {
         ["Miltal", `${formateraTal(lead.miltal)} mil`],
         ["Telefon", formateraTelefon(lead.telefon)],
         ...(lead.epost ? ([["E-post", lead.epost]] as Rad[]) : []),
+        ...(lead.meddelande
+          ? ([["Meddelande", lead.meddelande]] as Rad[])
+          : []),
       ];
     case "salj":
       return [

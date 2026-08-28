@@ -10,6 +10,7 @@ import {
 } from "@/lib/leadvalidering";
 import Faltfel from "./form/Faltfel";
 import SkickaKnapp from "./form/SkickaKnapp";
+import { Bildvaljare, useBildvaljare } from "./form/Bildvaljare";
 
 /** Förmedla din bil → strukturerat mejl via Server Action (M2). */
 export default function FormedlingFormular() {
@@ -18,7 +19,9 @@ export default function FormedlingFormular() {
     TOM_LEADSTATE,
   );
   const start = useRef(Date.now());
-  const skicka = (fd: FormData) => {
+  const bild = useBildvaljare();
+  const skicka = async (fd: FormData) => {
+    await bild.bifogaTill(fd); // komprimerar + strippar EXIF + bifogar
     fd.set("dt", String(Date.now() - start.current));
     return action(fd);
   };
@@ -27,6 +30,7 @@ export default function FormedlingFormular() {
     miltal: "",
     telefon: "",
     epost: "",
+    meddelande: "",
   });
   const [samtycke, setSamtycke] = useState(false);
   const upp =
@@ -136,6 +140,23 @@ export default function FormedlingFormular() {
         </div>
 
         <div className="sm:col-span-2">
+          <label htmlFor="f-meddelande" className="field-label">
+            Meddelande <span className="text-fog">· valfritt</span>
+          </label>
+          <textarea
+            id="f-meddelande"
+            name="meddelande"
+            rows={3}
+            value={v.meddelande}
+            onChange={upp("meddelande")}
+            className="field-input min-h-[88px] resize-y"
+            placeholder="Berätta gärna om skick, utrustning och servicehistorik…"
+          />
+        </div>
+
+        <Bildvaljare {...bild} />
+
+        <div className="sm:col-span-2">
           <label className="flex items-start gap-3 text-xs text-mist">
             <input
               type="checkbox"
@@ -157,7 +178,9 @@ export default function FormedlingFormular() {
         )}
 
         <div className="sm:col-span-2">
-          <SkickaKnapp pending={pending}>Skicka</SkickaKnapp>
+          <SkickaKnapp pending={pending || bild.komprimerar || bild.laddar}>
+            Skicka
+          </SkickaKnapp>
         </div>
       </form>
     </div>

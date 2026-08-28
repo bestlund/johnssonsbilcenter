@@ -75,6 +75,7 @@ export async function skickaLeadAction(
     const miltal = g("miltal").replace(/[^\d]/g, "");
     const telefon = sanera(g("telefon"));
     const epost = g("epost").trim();
+    const meddelande = g("meddelande").trim();
 
     let e: string | null;
     if ((e = valideraRegnr(regnr))) fel.regnr = e;
@@ -89,6 +90,7 @@ export async function skickaLeadAction(
       miltal,
       telefon,
       ...(epost ? { epost } : {}),
+      ...(meddelande ? { meddelande } : {}),
     };
   } else if (typ === "salj") {
     const regnr = saneraRegnr(g("regnr"));
@@ -133,7 +135,7 @@ export async function skickaLeadAction(
   // Bilder (endast sälj) → mejlbilagor. Best-effort: en misslyckad bild eller
   // hela processningen får aldrig fälla leaden.
   let bilagor: Bilaga[] = [];
-  if (lead.typ === "salj") {
+  if (lead.typ === "salj" || lead.typ === "formedling") {
     try {
       const filer = formData
         .getAll("bilder")

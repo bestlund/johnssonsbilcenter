@@ -124,7 +124,7 @@ export default function HeroFlikar({
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label htmlFor="salj-regnr" className="field-label">
-                    Registreringsnummer
+                    Registreringsnummer *
                   </label>
                   <div className="relative">
                     <SvenskPlatBricka className="pointer-events-none absolute inset-y-px left-px w-7 overflow-hidden rounded-l-[7px]" />
@@ -164,7 +164,7 @@ export default function HeroFlikar({
 
               <div className="mt-3">
                 <label htmlFor="salj-tel" className="field-label">
-                  Telefonnummer
+                  Telefonnummer *
                 </label>
                 <input
                   id="salj-tel"

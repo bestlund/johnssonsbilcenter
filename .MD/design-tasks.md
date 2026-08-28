@@ -40,8 +40,12 @@ Från Jacobs notes 2026-08-27. `[ ]` kvar · `[x]` klart · `[~]` pågår.
       (Google-betyg + antal bilar), servad på `/llms.html` via rewrite, länkad
       "llms" i footern, med i sitemap.
 
-## Kvar / att förtydliga
-- [ ] Ev. bilder även i förmedlings-formuläret (bara sälj nu)
+## Batch 6 — förmedling: bilder + meddelande + DRY  ✅ (byggd)
+- [x] Bröt ut bildväljaren till delad `form/Bildvaljare.tsx` (hook + UI)
+- [x] Bilder + meddelande-fält även i förmedlings-formuläret (samma flöde som sälj)
+
+## Allt i design-listan klart ✅ — kvar bara:
+- [ ] **Mejl → Gmail:** väntar på Loopia (DKIM/DMARC) — extern blockerare
 
 ## Noteringar
 - **GDPR-beslut:** bilder = mejlbilagor, INGEN molnlagring (Blob). EXIF/GPS strippas

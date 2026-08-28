@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useRef, useState } from "react";
+import Link from "next/link";
 import { skickaLeadAction } from "@/app/actions/leads";
 import { TOM_LEADSTATE } from "@/lib/leadstate";
 import {
@@ -10,36 +11,7 @@ import {
 } from "@/lib/leadvalidering";
 import Faltfel from "./form/Faltfel";
 import SkickaKnapp from "./form/SkickaKnapp";
-
-/**
- * Komprimerar + orienterar en bild klient-side innan upload: applicerar
- * EXIF-orientering, krymper till max 1600px och re-encodar som JPEG via canvas
- * (vilket också strippar all metadata/GPS). Håller uppladdningen liten nog för
- * Server Actions body-gräns. Faller tillbaka på originalet om något strular.
- */
-async function komprimera(file: File): Promise<Blob> {
-  try {
-    const bild = await createImageBitmap(file, {
-      imageOrientation: "from-image",
-    });
-    const max = 1600;
-    const skala = Math.min(1, max / Math.max(bild.width, bild.height));
-    const w = Math.round(bild.width * skala);
-    const h = Math.round(bild.height * skala);
-    const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return file;
-    ctx.drawImage(bild, 0, 0, w, h);
-    const blob = await new Promise<Blob | null>((res) =>
-      canvas.toBlob(res, "image/jpeg", 0.8),
-    );
-    return blob ?? file;
-  } catch {
-    return file;
-  }
-}
+import { Bildvaljare, useBildvaljare } from "./form/Bildvaljare";
 
 /**
  * Sälj din bil → strukturerat mejl via Server Action (M2). Förifylls från
@@ -65,56 +37,10 @@ export default function SaljFormular({
     meddelande: "",
   });
   const [samtycke, setSamtycke] = useState(false);
-
-  // Bilder (valfritt) → bifogas mejlet. Hanteras i state för förhandsvisning +
-  // borttagning; filerna läggs på FormData i skicka().
-  const MAX_BILDER = 6;
-  const MAX_STORLEK = 12 * 1024 * 1024; // 12 MB
-  const [bilder, setBilder] = useState<{ file: File; url: string }[]>([]);
-  const [bildFel, setBildFel] = useState("");
-  const [komprimerar, setKomprimerar] = useState(false);
-  const filRef = useRef<HTMLInputElement>(null);
-
-  function laggTillBilder(valda: FileList | null) {
-    if (!valda) return;
-    setBildFel("");
-    const nya: { file: File; url: string }[] = [];
-    for (const f of Array.from(valda)) {
-      if (!f.type.startsWith("image/")) {
-        setBildFel("Bara bilder kan laddas upp.");
-        continue;
-      }
-      if (f.size > MAX_STORLEK) {
-        setBildFel("Någon bild är för stor (max 12 MB).");
-        continue;
-      }
-      nya.push({ file: f, url: URL.createObjectURL(f) });
-    }
-    setBilder((b) => {
-      if (b.length + nya.length > MAX_BILDER)
-        setBildFel(`Du kan bifoga max ${MAX_BILDER} bilder.`);
-      return [...b, ...nya].slice(0, MAX_BILDER);
-    });
-    if (filRef.current) filRef.current.value = ""; // tillåt samma fil igen
-  }
-
-  function taBort(i: number) {
-    setBilder((b) => {
-      URL.revokeObjectURL(b[i]?.url);
-      return b.filter((_, n) => n !== i);
-    });
-  }
+  const bild = useBildvaljare();
 
   const skicka = async (fd: FormData) => {
-    setKomprimerar(true);
-    try {
-      for (let i = 0; i < bilder.length; i++) {
-        const blob = await komprimera(bilder[i].file);
-        fd.append("bilder", blob, `bild-${i + 1}.jpg`);
-      }
-    } finally {
-      setKomprimerar(false);
-    }
+    await bild.bifogaTill(fd); // komprimerar + strippar EXIF + bifogar
     fd.set("dt", String(Date.now() - t0.current));
     return action(fd);
   };
@@ -262,70 +188,12 @@ export default function SaljFormular({
             rows={3}
             value={v.meddelande}
             onChange={upp("meddelande")}
-            className="field-input"
-            placeholder="Berätta gärna mer — skick, utrustning, servicehistorik…"
+            className="field-input min-h-[88px] resize-y"
+            placeholder="Berätta gärna om skick, utrustning och servicehistorik…"
           />
         </div>
 
-        {/* Bilder — valfritt, bifogas mejlet (EXIF strippas server-side) */}
-        <div className="sm:col-span-2">
-          <span className="field-label">
-            Bilder på bilen <span className="text-fog">· valfritt</span>
-          </span>
-          <input
-            ref={filRef}
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={(e) => laggTillBilder(e.target.files)}
-            className="hidden"
-          />
-
-          {bilder.length > 0 && (
-            <div className="mb-3 flex flex-wrap gap-2">
-              {bilder.map((b, i) => (
-                <div
-                  key={b.url}
-                  className="relative h-20 w-20 overflow-hidden rounded-md border border-line-strong bg-elevated"
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={b.url}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => taBort(i)}
-                    aria-label="Ta bort bild"
-                    className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/70 text-sm leading-none text-white transition-colors hover:bg-black active:scale-95"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {bilder.length < MAX_BILDER && (
-            <button
-              type="button"
-              onClick={() => filRef.current?.click()}
-              className="btn btn-secondary"
-            >
-              Lägg till bilder
-            </button>
-          )}
-          <p className="mt-2 text-xs text-fog">
-            Upp till {MAX_BILDER} bilder. Hjälper oss ge en snabbare och mer
-            träffsäker värdering.
-          </p>
-          {bildFel && (
-            <p role="alert" className="mt-1 text-xs text-danger">
-              {bildFel}
-            </p>
-          )}
-        </div>
+        <Bildvaljare {...bild} />
 
         <div className="sm:col-span-2">
           <label className="flex items-start gap-3 text-xs text-mist">
@@ -349,11 +217,15 @@ export default function SaljFormular({
         )}
 
         <div className="sm:col-span-2">
-          <SkickaKnapp pending={pending || komprimerar}>
+          <SkickaKnapp pending={pending || bild.komprimerar || bild.laddar}>
             Få en värdering
           </SkickaKnapp>
           <p className="mt-3 text-center text-xs text-fog">
-            Vi återkommer samma dag · ingen förpliktelse
+            Vi återkommer så snabbt vi kan. Läs vår{" "}
+            <Link href="/integritetspolicy" className="link">
+              integritetspolicy
+            </Link>
+            .
           </p>
         </div>
       </form>
