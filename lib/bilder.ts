@@ -1,15 +1,20 @@
-import sharp from "sharp";
 import type { Bilaga } from "./leads";
 
 const MAX_ANTAL = 6;
-const MAX_BYTES = 12 * 1024 * 1024; // 12 MB per fil före processning
+const MAX_BYTES = 12 * 1024 * 1024; // 12 MB per fil
 
 /**
- * Gör uppladdade bilder till mejlbilagor (server-only). Per bild:
- *  - auto-roterar efter EXIF-orientering (annars kan foton hamna på sidan)
- *  - storleksändrar till max 1600px (behåller proportioner, förstorar aldrig)
- *  - komprimerar till JPEG (kvalitet 80)
- *  - STRIPPAR all metadata (sharp behåller ingen by default) → EXIF/GPS bort
+ * Gör uppladdade bilder till mejlbilagor (server-only).
+ *
+ * Bilderna är redan färdigbehandlade klient-side (se `komprimera` i
+ * Bildvaljare): storleksändrade till max 1400px, JPEG-komprimerade och
+ * EXIF/GPS-strippade genom canvas-re-encode. Här läser vi bara in de färdiga
+ * bytena och base64-kodar dem för bilagan.
+ *
+ * Ingen server-bildbehandling (sharp) — det gav ett native-beroende (libvips)
+ * som inte gick att ladda på Vercels Linux-runtime och kraschade hela
+ * lead-actionen. Next behåller sin egen sharp för bildoptimering; det här är
+ * fristående.
  *
  * Ogiltiga/oläsbara filer hoppas tyst så att en trasig bild aldrig fäller leaden.
  */
@@ -24,17 +29,12 @@ export async function processaBilder(filer: File[]): Promise<Bilaga[]> {
   for (let i = 0; i < valda.length; i++) {
     try {
       const buf = Buffer.from(await valda[i].arrayBuffer());
-      const out = await sharp(buf)
-        .rotate()
-        .resize(1600, 1600, { fit: "inside", withoutEnlargement: true })
-        .jpeg({ quality: 80 })
-        .toBuffer();
       bilagor.push({
         filename: `bil-${i + 1}.jpg`,
-        content: out.toString("base64"),
+        content: buf.toString("base64"),
       });
     } catch {
-      /* korrupt/oläsbar (t.ex. HEIC utan stöd) → hoppa tyst */
+      /* oläsbar → hoppa tyst */
     }
   }
   return bilagor;

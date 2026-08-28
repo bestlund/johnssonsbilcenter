@@ -30,9 +30,11 @@ Från Jacobs notes 2026-08-27. `[ ]` kvar · `[x]` klart · `[~]` pågår.
 - [x] Auto-formatering av inmatningsfält (live + i mejlet): regnr `ABC 12X`,
       pris/miltal `185 000`, telefon `070-199 06 00` (`lib/leadvalidering.ts`)
 - [x] Bilduppladdning i sälj-formuläret — **mejlbilagor** (GDPR-val, ej Blob):
-      klient komprimerar + orienterar + strippar EXIF (canvas), server re-processar
-      med sharp (auktoritativ EXIF-strip + resize) → bifogas lead-mejlet.
-      `bodySizeLimit: 6mb`, max 6 bilder, felsäkert.
+      klient komprimerar (1400px) + orienterar + strippar EXIF/GPS via
+      canvas-re-encode → base64-bilaga på lead-mejlet. INGEN server-sharp:
+      libvips gick inte att ladda på Vercels runtime och kraschade actionen →
+      borttagen, klienten gör hela jobbet. `bodySizeLimit: 4.5mb` (Vercels tak),
+      klient-vakt på totalstorlek, max 6 bilder, felsäkert.
 - [x] Valfritt meddelande-fält (sälj)
 
 ## Batch 5 — llms.html  ✅ (byggd)
