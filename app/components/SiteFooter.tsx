@@ -29,14 +29,10 @@ const KOLUMNER = [
 ];
 
 const SOCIALA = [
-  { label: "Instagram", href: "https://www.instagram.com/sjohnssonbilcenter/" },
-  {
-    label: "Facebook",
-    href: "https://www.facebook.com/profile.php?id=61555954300776",
-  },
+  { label: "Instagram", href: "https://www.instagram.com/johnssonbilcenter/" },
   {
     label: "Blocket",
-    href: "https://www.blocket.se/butik/sjohnsson-bilcenter-ab",
+    href: "https://www.blocket.se/mobility/dealer/7323722/johnsson-bilcenter-ab",
   },
 ];
 

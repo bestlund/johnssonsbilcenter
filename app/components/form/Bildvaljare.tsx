@@ -174,7 +174,7 @@ export function Bildvaljare({
     <div className="sm:col-span-2">
       <span className="field-label">
         Bilder på bilen{" "}
-        <span className="text-fog">· valfritt (upp till {MAX_BILDER})</span>
+        <span className="text-fog">(valfritt, upp till {MAX_BILDER})</span>
       </span>
 
       <input

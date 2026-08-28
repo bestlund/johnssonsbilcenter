@@ -99,7 +99,7 @@ export default function SaljFormular({
 
         <div>
           <label htmlFor="s-miltal" className="field-label">
-            Miltal <span className="text-fog">· valfritt</span>
+            Miltal <span className="text-fog">(valfritt)</span>
           </label>
           <input
             id="s-miltal"
@@ -116,7 +116,7 @@ export default function SaljFormular({
 
         <div>
           <label htmlFor="s-pris" className="field-label">
-            Ditt önskade pris <span className="text-fog">· valfritt</span>
+            Ditt önskade pris <span className="text-fog">(valfritt)</span>
           </label>
           <input
             id="s-pris"
@@ -149,7 +149,7 @@ export default function SaljFormular({
 
         <div>
           <label htmlFor="s-namn" className="field-label">
-            Namn <span className="text-fog">· valfritt</span>
+            Namn <span className="text-fog">(valfritt)</span>
           </label>
           <input
             id="s-namn"
@@ -163,7 +163,7 @@ export default function SaljFormular({
 
         <div>
           <label htmlFor="s-epost" className="field-label">
-            E-post <span className="text-fog">· valfritt</span>
+            E-post <span className="text-fog">(valfritt)</span>
           </label>
           <input
             id="s-epost"
@@ -180,7 +180,7 @@ export default function SaljFormular({
 
         <div className="sm:col-span-2">
           <label htmlFor="s-meddelande" className="field-label">
-            Meddelande <span className="text-fog">· valfritt</span>
+            Meddelande <span className="text-fog">(valfritt)</span>
           </label>
           <textarea
             id="s-meddelande"

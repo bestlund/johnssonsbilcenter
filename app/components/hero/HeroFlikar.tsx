@@ -143,7 +143,7 @@ export default function HeroFlikar({
                 <div>
                   <label htmlFor="salj-pris" className="field-label">
                     Ditt önskade pris{" "}
-                    <span className="text-fog">· valfritt</span>
+                    <span className="text-fog">(valfritt)</span>
                   </label>
                   <div className="relative">
                     <input

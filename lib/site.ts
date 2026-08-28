@@ -33,9 +33,8 @@ export const FORETAG = {
 
 /** Externa profiler → schema.org `sameAs` (bygger entiteten). */
 export const SOCIALA = [
-  "https://www.instagram.com/sjohnssonbilcenter/",
-  "https://www.facebook.com/profile.php?id=61555954300776",
-  "https://www.blocket.se/butik/sjohnsson-bilcenter-ab",
+  "https://www.instagram.com/johnssonbilcenter/",
+  "https://www.blocket.se/mobility/dealer/7323722/johnsson-bilcenter-ab",
 ];
 
 /** Publika, indexerbara sidor (för sitemap). `/nextlease-embed` är noindex. */

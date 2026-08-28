@@ -141,7 +141,7 @@ export default function FormedlingFormular() {
 
         <div className="sm:col-span-2">
           <label htmlFor="f-meddelande" className="field-label">
-            Meddelande <span className="text-fog">· valfritt</span>
+            Meddelande <span className="text-fog">(valfritt)</span>
           </label>
           <textarea
             id="f-meddelande"
