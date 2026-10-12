@@ -21,6 +21,7 @@ const NAV: NavItem[] = [
       { label: "Förmedla din bil", href: "/formedling" },
     ],
   },
+  { label: "Verkstad", href: "/verkstad" },
   { label: "Om oss", href: "/om-oss" },
   { label: "Kontakta oss", href: "/kontakt" },
 ];
@@ -184,6 +185,8 @@ export default function SiteHeader() {
               return item.barn ? (
                 // Dropdown (CSS-only: group-hover + focus-within). pt-3 bildar en
                 // osynlig "brygga" så hovern inte tappas mellan trigger och panel.
+                // Panelen centreras under triggern (left-1/2 + -translate-x-1/2)
+                // och är w-max → hugger bredaste raden, lika luft på båda sidor.
                 <div key={item.href} className="group relative">
                   <Link
                     href={item.href}
@@ -195,8 +198,8 @@ export default function SiteHeader() {
                     {item.label}
                     <ChevronIkon className="h-3 w-3 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" />
                   </Link>
-                  <div className="invisible absolute left-0 top-full z-40 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                    <div className="min-w-[220px] rounded-lg border border-line-strong bg-card p-2 shadow-lg">
+                  <div className="invisible absolute left-1/2 top-full z-40 w-max -translate-x-1/2 pt-3 opacity-0 transition-opacity group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                    <div className="rounded-lg border border-line-strong bg-card p-2 shadow-lg">
                       {item.barn.map((b) => (
                         <Link
                           key={b.href}

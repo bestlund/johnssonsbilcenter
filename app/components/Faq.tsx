@@ -15,14 +15,19 @@ export const FRAGOR = [
   },
 ];
 
-/** §7.6 Accordion — rad-för-rad, padding 16px 0, fråga 15px/500, + roterar 45°. */
-export default function Faq() {
+export type Fraga = { fraga: string; svar: React.ReactNode };
+
+/**
+ * §7.6 Accordion — rad-för-rad, padding 16px 0, fråga 15px/500, + roterar 45°.
+ * Startsidans FRAGOR som default; /verkstad skickar in egna.
+ */
+export default function Faq({ fragor = FRAGOR }: { fragor?: Fraga[] }) {
   return (
     <section className="shell max-w-3xl py-14 lg:py-20">
       <h2>Bra att veta</h2>
 
       <div className="mt-8">
-        {FRAGOR.map((f) => (
+        {fragor.map((f) => (
           <details key={f.fraga} className="group border-b border-line py-4">
             <summary className="pressable -mx-3 flex cursor-pointer list-none items-center justify-between gap-6 rounded-md px-3 py-1">
               <span className="text-[15px] font-medium">{f.fraga}</span>

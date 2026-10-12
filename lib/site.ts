@@ -31,6 +31,28 @@ export const FORETAG = {
   ],
 } as const;
 
+/**
+ * Smart Bilverkstad — fristående verkstad i samma hus som Johnsson (/verkstad).
+ * Delar tills vidare adress och telefon (Simons) med FORETAG. E-post och
+ * öppettider kommer från verkstadens flyer.
+ * Får verkstaden eget nummer eller egen Google-profil: ändra HÄR så att sidan,
+ * JSON-LD och llms följer med.
+ */
+export const VERKSTAD = {
+  namn: "Smart Bilverkstad",
+  beskrivning:
+    "Bilverkstad i samma hus som Johnsson Bilcenter på Florettgatan 8 i Helsingborg. Kamremsbyte, felsökning, däckskifte och större reparationer.",
+  telefon: FORETAG.telefon,
+  telefonVisning: FORETAG.telefonVisning,
+  epost: "verkstad@johnssonsbilcenter.se",
+  adress: FORETAG.adress,
+  /** Flyern visar bara vardagar. Helgen är obekräftad → utelämnad, hellre inget
+   *  än fel tider i Google. */
+  oppettider: [
+    { dagar: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], fran: "10:00", til: "18:00" },
+  ],
+} as const;
+
 /** Externa profiler → schema.org `sameAs` (bygger entiteten). */
 export const SOCIALA = [
   "https://www.instagram.com/johnssonbilcenter/",
@@ -46,6 +68,7 @@ export const SIDOR = [
   { path: "/formedling", priority: 0.8 },
   { path: "/tjanster/finansiering", priority: 0.6 },
   { path: "/tjanster/garanti", priority: 0.6 },
+  { path: "/verkstad", priority: 0.7 },
   { path: "/om-oss", priority: 0.6 },
   { path: "/kontakt", priority: 0.7 },
   { path: "/integritetspolicy", priority: 0.3 },

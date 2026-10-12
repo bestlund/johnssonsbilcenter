@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
-import { FORETAG, SOCIALA } from "@/lib/site";
+import { FORETAG, SOCIALA, VERKSTAD } from "@/lib/site";
 import { hamtaGoogleOmdomen } from "@/lib/googleReviews";
 import { hamtaAllaFordon } from "@/lib/nextlease";
 
@@ -113,6 +113,29 @@ export default async function Llms() {
                 — {t.text}
               </li>
             ))}
+          </ul>
+
+          {/* Eget företag i samma hus — hålls isär från Johnssons tjänster ovan
+              så att AI inte tror att Johnsson själva driver verkstaden. */}
+          <h2 className="mt-12">Verkstad i samma hus</h2>
+          <ul className="mt-4 space-y-2">
+            <Rad etikett="Namn">{VERKSTAD.namn}</Rad>
+            <Rad etikett="Relation">
+              Fristående verkstad i samarbete med {FORETAG.kortnamn}, på samma
+              adress
+            </Rad>
+            <Rad etikett="Tjänster">
+              Kamremsbyte, felsökning, däckskifte och större reparationer
+            </Rad>
+            <Rad etikett="Bokning">
+              Ring {VERKSTAD.telefonVisning} eller mejla {VERKSTAD.epost}
+            </Rad>
+            <Rad etikett="Öppettider">Mån–fre 10:00–18:00, söndag stängt</Rad>
+            <Rad etikett="Mer information">
+              <Link href="/verkstad" className="link font-semibold">
+                /verkstad
+              </Link>
+            </Rad>
           </ul>
 
           <h2 className="mt-12">Viktiga sidor</h2>

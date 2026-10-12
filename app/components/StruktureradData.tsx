@@ -1,13 +1,53 @@
-import { FORETAG, SITE_URL, SOCIALA } from "@/lib/site";
+import { FORETAG, SITE_URL, SOCIALA, VERKSTAD } from "@/lib/site";
 import type { GoogleOmdomen } from "@/lib/googleReviews";
 import { FRAGOR } from "./Faq";
 
-/** Renderar ett JSON-LD-script (schema.org) i sidan. */
+/** Renderar ett JSON-LD-script (schema.org) i sidan. `<` escapas mot XSS (Next-docs). */
 function JsonLd({ data }: { data: object }) {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(data).replace(/</g, "\\u003c"),
+      }}
+    />
+  );
+}
+
+/**
+ * Strukturerad data för /verkstad: AutoRepair (LocalBusiness) för Smart
+ * Bilverkstad. Egen entitet, inte en del av AutoDealer ovan — det är ett eget
+ * företag i samma hus. Uppgifterna kommer från VERKSTAD i lib/site.ts.
+ * FAQPage läggs till när verkstadens FAQ-svar är bekräftade.
+ */
+export function VerkstadStruktureradData() {
+  return (
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "AutoRepair",
+        "@id": `${SITE_URL}/verkstad#verkstad`,
+        name: VERKSTAD.namn,
+        url: `${SITE_URL}/verkstad`,
+        telephone: VERKSTAD.telefon,
+        email: VERKSTAD.epost,
+        description: VERKSTAD.beskrivning,
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: VERKSTAD.adress.gata,
+          postalCode: VERKSTAD.adress.postnr,
+          addressLocality: VERKSTAD.adress.ort,
+          addressRegion: VERKSTAD.adress.region,
+          addressCountry: VERKSTAD.adress.land,
+        },
+        areaServed: { "@type": "City", name: "Helsingborg" },
+        openingHoursSpecification: VERKSTAD.oppettider.map((o) => ({
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: o.dagar,
+          opens: o.fran,
+          closes: o.til,
+        })),
+      }}
     />
   );
 }

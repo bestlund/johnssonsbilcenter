@@ -15,6 +15,7 @@ const KOLUMNER = [
       { label: "Förmedla din bil", href: "/formedling" },
       { label: "Finansiering", href: "/tjanster/finansiering" },
       { label: "Garanti", href: "/tjanster/garanti" },
+      { label: "Verkstad", href: "/verkstad" },
     ],
   },
   {
