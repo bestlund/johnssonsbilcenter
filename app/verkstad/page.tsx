@@ -4,15 +4,13 @@ import SiteHeader from "@/app/components/SiteHeader";
 import SiteFooter from "@/app/components/SiteFooter";
 import Tjanster, { type Tjanst } from "@/app/components/Tjanster";
 import Oppettider, { type Oppettid } from "@/app/components/Oppettider";
-import Faq, { type Fraga } from "@/app/components/Faq";
-import Bekrafta from "@/app/components/Bekrafta";
+import Faq from "@/app/components/Faq";
 import { VerkstadStruktureradData } from "@/app/components/StruktureradData";
 import { VERKSTAD } from "@/lib/site";
 
 /**
  * Verkstad — Smart Bilverkstad, eget företag i samma hus som Johnsson.
- * Underlag: verkstad-sida-utkast.md. <Bekrafta> markerar uppgifter som väntar
- * på svar från Simon/verkstaden — sidan ska inte publiceras med dem kvar.
+ * Underlag: verkstad-sida-utkast.md och verkstadens flyer.
  */
 
 export const metadata: Metadata = {
@@ -99,29 +97,39 @@ const TIDER: Oppettid[] = [
   { dag: "Söndag", tid: "Stängt" },
 ];
 
-const FRAGOR: Fraga[] = [
+// Bara frågor som går att besvara med kända fakta. Däckregler: Transportstyrelsen.
+// Svaren är strängar eftersom de även går ut som FAQPage-JSON-LD.
+const FRAGOR: { fraga: string; svar: string }[] = [
   {
-    fraga: "Hur bokar jag?",
+    fraga: "Hur bokar jag tid?",
     svar: `Ring ${VERKSTAD.telefonVisning} under våra öppettider eller mejla ${VERKSTAD.epost}, så hittar vi en tid som passar dig.`,
   },
   {
-    fraga: "Måste jag ha köpt bilen hos Johnsson Bilcenter?",
-    svar: <Bekrafta>svar saknas</Bekrafta>,
+    fraga: "Vilka öppettider har verkstaden?",
+    svar: "Måndag till fredag 10:00–18:00. På söndagar är verkstaden stängd.",
   },
   {
-    fraga: "Vilka bilmärken tar ni emot?",
-    svar: <Bekrafta>svar saknas</Bekrafta>,
+    fraga: "Var ligger verkstaden?",
+    svar: "På Florettgatan 8 i Helsingborg, i samma hus som Johnsson Bilcenter.",
   },
   {
-    fraga: "Får jag ett prisförslag innan ni börjar?",
-    svar: <Bekrafta>svar saknas</Bekrafta>,
+    fraga: "En varningslampa lyser. Kan jag fortsätta köra?",
+    svar: "Det beror på färgen. En röd lampa betyder att du ska stanna så snart det är säkert, särskilt om den gäller oljetryck, motortemperatur eller laddning. En gul eller orange lampa är inte lika akut, men boka en felsökning snart så att ett litet fel inte hinner bli en dyr reparation.",
+  },
+  {
+    fraga: "Hur vet jag när kamremmen ska bytas?",
+    svar: "Intervallet bestäms av biltillverkaren och anges i mil eller år, beroende på vad som inträffar först. Det står i bilens servicebok eller instruktionsbok. Hittar du det inte, ring oss så hjälper vi dig att ta reda på det.",
+  },
+  {
+    fraga: "När ska jag byta till vinterdäck?",
+    svar: "Vinterdäck är krav 1 december–31 mars när det är vinterväglag, med minst 3 mm mönsterdjup. Dubbdäck får användas 1 oktober–15 april, och även utanför den perioden om det är eller väntas bli vinterväglag. Boka i god tid, hösten är högsäsong.",
   },
 ];
 
 export default function Verkstad() {
   return (
     <>
-      <VerkstadStruktureradData />
+      <VerkstadStruktureradData fragor={FRAGOR} />
       <SiteHeader />
       <main className="flex-1">
         {/* 1. Hero + öppettider i samma sektion (färre scroll till tiderna) */}

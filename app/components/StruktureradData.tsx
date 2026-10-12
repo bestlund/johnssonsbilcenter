@@ -18,37 +18,54 @@ function JsonLd({ data }: { data: object }) {
  * Strukturerad data för /verkstad: AutoRepair (LocalBusiness) för Smart
  * Bilverkstad. Egen entitet, inte en del av AutoDealer ovan — det är ett eget
  * företag i samma hus. Uppgifterna kommer från VERKSTAD i lib/site.ts.
- * FAQPage läggs till när verkstadens FAQ-svar är bekräftade.
+ * Plus FAQPage från verkstadssidans FAQ.
  */
-export function VerkstadStruktureradData() {
+export function VerkstadStruktureradData({
+  fragor,
+}: {
+  fragor: { fraga: string; svar: string }[];
+}) {
+  const verkstad = {
+    "@context": "https://schema.org",
+    "@type": "AutoRepair",
+    "@id": `${SITE_URL}/verkstad#verkstad`,
+    name: VERKSTAD.namn,
+    url: `${SITE_URL}/verkstad`,
+    telephone: VERKSTAD.telefon,
+    email: VERKSTAD.epost,
+    description: VERKSTAD.beskrivning,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: VERKSTAD.adress.gata,
+      postalCode: VERKSTAD.adress.postnr,
+      addressLocality: VERKSTAD.adress.ort,
+      addressRegion: VERKSTAD.adress.region,
+      addressCountry: VERKSTAD.adress.land,
+    },
+    areaServed: { "@type": "City", name: "Helsingborg" },
+    openingHoursSpecification: VERKSTAD.oppettider.map((o) => ({
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: o.dagar,
+      opens: o.fran,
+      closes: o.til,
+    })),
+  };
+
+  const faq = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: fragor.map((f) => ({
+      "@type": "Question",
+      name: f.fraga,
+      acceptedAnswer: { "@type": "Answer", text: f.svar },
+    })),
+  };
+
   return (
-    <JsonLd
-      data={{
-        "@context": "https://schema.org",
-        "@type": "AutoRepair",
-        "@id": `${SITE_URL}/verkstad#verkstad`,
-        name: VERKSTAD.namn,
-        url: `${SITE_URL}/verkstad`,
-        telephone: VERKSTAD.telefon,
-        email: VERKSTAD.epost,
-        description: VERKSTAD.beskrivning,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: VERKSTAD.adress.gata,
-          postalCode: VERKSTAD.adress.postnr,
-          addressLocality: VERKSTAD.adress.ort,
-          addressRegion: VERKSTAD.adress.region,
-          addressCountry: VERKSTAD.adress.land,
-        },
-        areaServed: { "@type": "City", name: "Helsingborg" },
-        openingHoursSpecification: VERKSTAD.oppettider.map((o) => ({
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: o.dagar,
-          opens: o.fran,
-          closes: o.til,
-        })),
-      }}
-    />
+    <>
+      <JsonLd data={verkstad} />
+      <JsonLd data={faq} />
+    </>
   );
 }
 
