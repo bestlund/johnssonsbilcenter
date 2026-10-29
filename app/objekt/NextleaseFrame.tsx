@@ -8,19 +8,22 @@ import { BilkortSkelettGrid } from "@/app/components/Skelett";
  * widgetens globala CSS/JS från resten av sajten. Parent-hashen (t.ex.
  * `#/details/{uid}` från våra bilkort) skickas in i iframens URL så deep-links
  * funkar. Höjden autojusteras efter innehållet (samma origin → vi kan mäta det).
+ * Med `uid` (från /objekt/[uid]) öppnas bilens detaljvy direkt i stället.
  */
-export default function NextleaseFrame() {
+export default function NextleaseFrame({ uid }: { uid?: string }) {
   const ref = useRef<HTMLIFrameElement>(null);
-  const [src, setSrc] = useState<string>("");
+  const [hashSrc, setHashSrc] = useState<string>("");
   const [laddar, setLaddar] = useState(true);
+  const src = uid ? `/nextlease-embed#/details/${uid}` : hashSrc;
 
-  // Spegla parent-hashen till iframens src.
+  // Spegla parent-hashen till iframens src (bara bar /objekt).
   useEffect(() => {
-    const sync = () => setSrc(`/nextlease-embed${window.location.hash}`);
+    if (uid) return;
+    const sync = () => setHashSrc(`/nextlease-embed${window.location.hash}`);
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
-  }, []);
+  }, [uid]);
 
   // Autojustera höjd efter iframens innehåll.
   useEffect(() => {

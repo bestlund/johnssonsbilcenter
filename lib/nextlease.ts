@@ -68,5 +68,11 @@ export async function hamtaAllaFordon(): Promise<HamtResultat> {
   return hamtaAlla();
 }
 
+/** En bil ur lagret — för delningsmetadata på /objekt/[uid]. null om såld/okänd. */
+export async function hamtaFordon(uid: string): Promise<Fordon | null> {
+  const { fordon } = await hamtaAlla();
+  return fordon.find((f) => f.uid === uid) ?? null;
+}
+
 /** 15958 → "15 958 mil" osv. Svensk tusenavgränsare. */
 export const formatTal = (n: number) => n.toLocaleString("sv-SE");

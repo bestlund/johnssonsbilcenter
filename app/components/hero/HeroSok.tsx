@@ -31,9 +31,8 @@ const formatPris = (n: number) =>
 
 /**
  * Hero-typeahead. Filtrerar det medskickade lagret (SokBil[]) på klientsidan —
- * ingen extra API-runda — och länkar direkt till bilens detaljvy i Nextlease-
- * widgeten (`/objekt#/details/{uid}`, den enda fungerande deep-linken). "Se alla"
- * går till vår egen browse på /bilar.
+ * ingen extra API-runda — och länkar direkt till bilens egen sida `/objekt/{uid}`
+ * (Nextlease-widgetens detaljvy). "Se alla" går till vår egen browse på /bilar.
  */
 export default function HeroSok({ bilar }: { bilar: SokBil[] }) {
   const router = useRouter();
@@ -71,7 +70,7 @@ export default function HeroSok({ bilar }: { bilar: SokBil[] }) {
     return () => document.removeEventListener("mousedown", stang);
   }, [visa]);
 
-  const tillBil = (b: SokBil) => `/objekt#/details/${b.uid}`;
+  const tillBil = (b: SokBil) => `/objekt/${b.uid}`;
 
   function onKeyDown(e: React.KeyboardEvent) {
     if (e.key === "Escape") {

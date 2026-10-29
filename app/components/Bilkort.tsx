@@ -4,8 +4,8 @@ import { bildUrl, formatTal, type Fordon } from "@/lib/nextlease";
 
 /**
  * Fordonskort — används på startsidan och i vår egen /bilar-browse.
- * Hela kortet länkar till bilens detaljvy i Nextlease-widgeten på /objekt
- * (`/objekt#/details/{uid}` — den enda fungerande deep-linken).
+ * Hela kortet länkar till bilens egen sida `/objekt/{uid}` (Nextlease-widgetens
+ * detaljvy + bilens egen delningsmetadata — se app/objekt/[uid]/page.tsx).
  */
 export default function Bilkort({ fordon: f }: { fordon: Fordon }) {
   const specar = [
@@ -17,7 +17,7 @@ export default function Bilkort({ fordon: f }: { fordon: Fordon }) {
 
   return (
     <Link
-      href={`/objekt#/details/${f.uid}`}
+      href={`/objekt/${f.uid}`}
       className="group flex flex-col overflow-hidden rounded-[6px] border border-line bg-card transition duration-150 hover:border-highlight active:scale-[0.99] motion-reduce:active:scale-100"
     >
       <div className="relative aspect-[3/2] overflow-hidden bg-elevated">
