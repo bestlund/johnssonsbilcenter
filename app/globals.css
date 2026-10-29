@@ -496,6 +496,50 @@ h4 {
 }
 
 /**
+ * Detaljvyn på smal skärm — pris + köp direkt under bilderna.
+ * Widgetens layout är ett grid med två kolumner (≥768px iframe-bredd):
+ *   vänster `.min-w-0`: SwiperGallery, DetailsTabs (beskrivning/utrustning)
+ *   höger: .nextlease-main-info (pris), .nextlease-instrictions (Beställ online),
+ *          div > .nextlease-action-buttons (Dela/Intresseanmälan + kontakt)
+ * Under 768px staplas kolumnerna, så priset hamnade under de långa flikarna.
+ * Vi plattar ut båda kolumnerna (display: contents) och sorterar med `order`:
+ * galleri → pris → Beställ online → knappar → flikar. Banner + "Om handlaren"
+ * ligger utanför gridet och stannar längst ner. Verifierat mot Details-chunken
+ * (Details-ThO5fBuX.js) — inte mot renderad DOM.
+ */
+@media (max-width: 767.98px) {
+  #nextlease .nextlease-details > div:has(> div > .nextlease-main-info) {
+    row-gap: 1.75rem !important;
+  }
+  #nextlease .nextlease-details > div:has(> div > .nextlease-main-info) > div {
+    display: contents;
+  }
+  #nextlease
+    .nextlease-details
+    > div:has(> div > .nextlease-main-info)
+    > div
+    > * {
+    min-width: 0;
+    margin-top: 0 !important;
+  }
+  #nextlease .nextlease-details .min-w-0 > :first-child {
+    order: 1;
+  }
+  #nextlease .nextlease-details .min-w-0 > :not(:first-child) {
+    order: 5;
+  }
+  #nextlease .nextlease-details .nextlease-main-info {
+    order: 2;
+  }
+  #nextlease .nextlease-details .nextlease-instrictions {
+    order: 3;
+  }
+  #nextlease .nextlease-details div:has(> .nextlease-action-buttons) {
+    order: 4;
+  }
+}
+
+/**
  * Formulärkontroller — PrimeVue-komponenter med hårdkodat LJUST tema som
  * widgetens mörka läge inte rör (sökruta, dropdowns, checkboxar, paginering).
  * Stabila .p-*-klasser. Färgstater (checked/aktiv/hover) kan behöva finjusteras
